@@ -1,14 +1,20 @@
-// src/pages/CalendarPage.js
+//Filename: src/pages/CalendarPage.js
+
 import React from 'react';
-import Calendar from '../components/Calendar';  // Import Calendar component
-import './CalendarPage.css';  // You can add any global styles for the calendar page here
+import Calendar from '../components/Calendar/Calendar.js';  // Import Calendar component
+import './CalendarPage.css';
 
 const CalendarPage = () => {
   return (
     <div className="calendar-page">
-      <h1>Gratitude Calendar</h1>
-      <Calendar />  {/* Render the Calendar component */}
-    </div>
+	  <div className="calendar-content">
+	    <h1 className="calendar-title">Gratitude Calendar</h1>
+		<p className="calendar-subtitle">
+		  Reflect on each day and note something you're grateful for.
+		</p>
+        <Calendar />  {/* Render the Calendar component */}
+      </div>
+	</div>
   );
 };
 

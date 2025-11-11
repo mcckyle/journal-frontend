@@ -1,0 +1,136 @@
+.calendar-container {
+  width: 100%;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  
+  transition: transform 0.2s ease;
+}
+
+.calendar-container:hover {
+	transform: scale(1.01);
+}
+
+.calendar-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 20px;
+}
+
+.calendar-header h2 {
+	font-size: 1.4rem;
+	color: #444;
+	margin: 0;
+}
+
+.calendar-header button {
+  background-color: #ffd580;
+  color: #333;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  
+  transition: background-color 0.3s ease;
+}
+
+.calendar-header button:hover {
+	background-color: #ffc857;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);  /* Ensures 7 columns for 7 days */
+  gap: 8px;
+  margin-bottom: 25px;
+}
+
+.calendar-day {
+  padding: 12px 0;
+  border-radius: 10px;
+  background-color: #fafafa;
+  cursor: pointer;
+  font-weight: 500;
+  color: #444;
+  text-align: center;
+  
+  transition: all 0.25s ease;
+}
+
+.calendar-day:hover {
+  background-color: #fff3d4;
+  transform: scale(1.05);
+}
+
+.calendar-day.today {
+	border: 2px solid #ffc857;
+	background-color: #fff9e5;
+}
+
+.calendar-day.selected {
+	background-color: #ffe7a0;
+	color: #333;
+	font-weight: bold;
+}
+
+/* Entry Box Styles. */
+.entry-box {
+	background: #fffef8;
+	border-radius: 15px;
+	padding: 20px;
+	text-align: left;
+	box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+.entry-box h3 {
+	margin-bottom: 10px;
+	color: #444;
+	font-size: 1.1rem;
+}
+
+.entry-box input {
+	width: 100%;
+	margin-bottom: 10px;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 10px;
+	font-size: 14px;
+	outline: none;
+}
+
+.entry-box textarea {
+  width: 100%;
+  height: 120px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.4;
+  outline: none;
+}
+
+.entry-box button {
+	display: block;
+	margin-top: 12px;
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 12px;
+	background-color: #ffd580;
+	color: #333;
+	font-weight: 600;
+	cursor: pointer;
+	
+	transition: background-color 0.3s ease;
+}
+
+.entry-box button:hover {
+	background-color: #ffc857;
+}
