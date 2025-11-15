@@ -1,7 +1,10 @@
-import React from 'react';
+//Filename: Register.jsx
+
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { TextField, Button, Container, Typography, Box, Alert } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Container, Typography, Box, Alert, Paper, Divider } from '@mui/material';
+import { useNavigate, Link } from 'react-router-dom';
+import './Register.css';
 
 const Register = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -17,16 +20,23 @@ const Register = () => {
         body: JSON.stringify(data),
       });
 
-      if (!response.ok)
+	  if ( ! response.ok)
 	  {
-        throw new Error('Registration failed');
-      }
-
-      const result = await response.json();
-      console.log(result); 
-      
-      // Redirect to login page after successful registration
-      navigate('/login');
+		  throw new Error('Invalid username or password!');
+	  }
+	  
+	  const result = await response.json();
+	  const { token } = result;
+	  
+	  if (token)
+	  {
+		  localStorage.setItem('token', token);
+		  navigate('/profile');
+	  }
+	  else
+	  {
+		  throw new Error('Token missing in response.');
+	  }
     }
 	catch (error)
 	{
@@ -35,11 +45,18 @@ const Register = () => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Box mt={5} p={4} boxShadow={3} borderRadius={4} textAlign="center">
-        <Typography variant="h4" gutterBottom>Register</Typography>
-        {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <Container className="auth-container" maxWidth="sm">
+      <Paper elevation={5} className="auth-paper">
+        <Typography variant="h4" className="auth-title">
+		  Create Account
+		</Typography>
+		<Typography variant="body1" color="textSecondary" sx={{ mb: 3 }}>
+		  Start your gratitude journey today.
+		</Typography>
+		
+		{errorMessage && <Alert severity="error" sx={{mb: 2}}>{errorMessage}</Alert>}
+		
+		<form onSubmit={handleSubmit(onSubmit)}>
           <TextField 
             label="Username" 
             fullWidth 
@@ -65,9 +82,23 @@ const Register = () => {
             error={!!errors.password}
             helperText={errors.password?.message}
           />
-          <Button variant="contained" color="primary" type="submit" fullWidth>Register</Button>
+          <Button
+		    variant="contained"
+			fullWidth
+			type="submit"
+			className="auth-button"
+		  >
+		    Register
+		  </Button>
         </form>
-      </Box>
+		
+		<Divider sx={{ my: 3}} />
+		
+		<Typography variant="body2" color="textSecondary">
+		  Already have an account?{' '}
+		  <Link to="/login" className="auth-link">Login</Link>
+		</Typography>
+      </Paper>
     </Container>
   );
 };

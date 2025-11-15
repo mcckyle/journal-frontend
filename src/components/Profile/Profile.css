@@ -1,71 +1,7 @@
-/* src/components/Profile.css */
-.profile-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #fdfbfb, #ebedee);
-}
+/* Filename: src/components/Profile/Profile.css */
 
-.profile-card {
-  background-color: #fff;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  max-width: 400px;
-  text-align: center;
-  transition: transform 0.3s;
-}
-
-.profile-card:hover {
-  transform: translateY(-5px);
-}
-
-.profile-title {
-  font-size: 26px;
-  color: #333;
-  margin-bottom: 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.profile-email {
-  font-size: 16px;
-  color: #555;
-  margin-bottom: 20px;
-}
-
-.profile-bio {
-  font-size: 18px;
-  color: #777;
-  font-style: italic;
-  margin-bottom: 30px;
-}
-
-.profile-actions {
-  display: flex;
-  justify-content: space-around;
-}
-
-.edit-button,
-.logout-button {
-  background-color: #ff8c00;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.edit-button:hover {
-  background-color: #ff9e33;
-}
-
-.logout-button {
-  background-color: #d9534f;
-}
-
-.logout-button:hover {
-  background-color: #c9302c;
+@keyframes fadeIn
+{
+	from { opacity: 0; transform: translate(-50%, -45%); }
+	to { opacity: 1; transform: translate(-50%, -50%); }
 }

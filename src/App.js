@@ -1,4 +1,5 @@
 // Filename: src/App.js
+
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header/Header.js';
@@ -46,16 +47,19 @@ const PrivateRoute = ({ element }) => {
 	const [authorized, setAuthorized] = useState(null);
 	
 	useEffect(() => {
-		const checkAuth = async () => {
-			const valid = await isAuthenticated();
-			setAuthorized(valid);
-		};
-		checkAuth();
-	}, []);
+		(async () => setAuthorized(await isAuthenticated()))();
+		}, []);
 	
 	if (authorized === null)
 	{
-		return <div>Loading...</div>;
+		return (
+		  <div style={{
+			  display: 'flex', justifyContent: 'center', alignItems: 'center',
+			  height: '80vh', fontSize: '1.1rem', color: '#555'
+		  }}>
+		    Checking session...
+		  </div>
+		);
 	}
 	
     return authorized ? element : <Navigate to="/login" replace />;
