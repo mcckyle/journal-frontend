@@ -1,34 +1,43 @@
+/* Filename: App.css */
+
 .app-container
 {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	
-	background: linear-gradient(135deg, #fdfcfb, #f3f7fa);
+	background: var(--color-bg);
 }
 
 .main-content
 {
 	flex: 1;
 	width: 100%;
-	padding: 0;
-	margin: 0;
-	display: block; /* No centering, no flex behavior. */
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	
+	animation: fadeInPage 0.35s ease both;
 }
 
 h2
 {
 	text-align: center;
 	color: #1e293b;
-	font-weight: 500;
-	margin-top: 4rem;
-	font-size: 1.5rem;
+	font-weight: 600;
+	margin-top: 3rem;
+	margin-bottom: 2rem;
+	font-size: 1.75rem;
+}
+
+@keyframes fadeInPage {
+	from { opacity: 0; transform: translateY(8px); }
+	to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px)
 {
 	.main-content
 	{
-		padding: 0;
+		padding: 1.25rem;
 	}
 }

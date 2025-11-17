@@ -8,10 +8,8 @@ const CalendarPage = () => {
   return (
     <Wrapper>
 	  <HeaderBar>
-	    <div>
-		  <h1>Gratitude Calendar</h1>
-		  <p>Your daily space to reflect, appreciate, and reconnect ✨</p>
-		</div>
+		<h1>Gratitude Calendar</h1>
+		<p>Your daily space to reflect, appreciate, and reconnect ✨</p>
 	  </HeaderBar>
 	  
 	  <CalendarSection>
@@ -27,30 +25,27 @@ export default CalendarPage;
 const Wrapper = styled.div`
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(160deg, #fffdf8, #fef7e8);
   display: flex;
   flex-direction: column;
   padding-bottom: 4rem;
+  background: linear-gradient(160deg, var(--color-bg), #fffdf4);
 `;
 
 const HeaderBar = styled.header`
-  width: 100%;
   padding: 3rem 4rem 2rem;
-  background: transparent;
-  border-radius: 24px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  text-align: left;
   
   h1 {
 	  font-size: 2.6rem;
-	  margin: 0;
 	  font-weight: 700;
-	  color: #1f2937;
+	  margin: 0;
+	  color: var(--color-text);
   }
   
   p {
 	  margin-top: 0.5rem;
 	  font-size: 1.15rem;
-	  color: #555;
+	  color: var(--color-muted);
   }
   
   @media (max-width: 768px)
@@ -58,7 +53,7 @@ const HeaderBar = styled.header`
 	  padding: 2rem 1.5rem;
 	  
 	  h1 {
-		font-size: 2.1rem;
+		font-size: 2rem;
 	  }
 	  
 	  p {

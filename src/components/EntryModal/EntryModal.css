@@ -1,0 +1,102 @@
+/* Filename: EntryModal.css */
+
+/* Overlay Styles. */
+.entry-modal-overlay {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.45);
+	backdrop-filter: blur(3px);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+	
+	animation: fadeIn 0.2s ease;
+}
+
+/* Modal Container Styles. */
+.entry-modal-content {
+	background: #fff;
+	width: 90%;
+	max-width: 480px;
+	border-radius: 14px;
+	padding: 24px;
+	position: relative;
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+	
+	animation: slideUp 0.25s ease;
+}
+
+/* Header Styles. */
+.entry-modal-header {
+	margin-top: 0;
+	margin-bottom: 16px;
+	font-weight: 600;
+	font-size: 1.25rem;
+}
+
+/* Modal Inputs Styles. */
+.entry-modal-input,
+.entry-modal-textarea {
+	width: 100%;
+	border: 1px solid #e2e2e2;
+	padding: 10px;
+	border-radius: 8px;
+	margin-bottom: 12px;
+	font-size: 1rem;
+}
+
+.entry-modal-textarea {
+	min-height: 120px;
+	resize: vertical;
+}
+
+/* Actions Styles. */
+.entry-modal-actions {
+	display: flex;
+	gap: 10px;
+	margin-top: 10px;
+}
+
+.entry-modal-save {
+	flex: 1;
+	background: #4f8df5;
+	color: white;
+	border: none;
+	padding: 10px;
+	border-radius: 8px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.entry-modal-delete {
+	background: #e74444;
+	color: white;
+	border: none;
+	padding: 10px 14px;
+	border-radius: 8px;
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+/* Close Button Styles. */
+.entry-modal-close {
+	position: absolute;
+	top: 12px;
+	right: 14px;
+	background: transparent;
+	border: none;
+	font-size: 1.4rem;
+	cursor: pointer;
+}
+
+/* Fade In Animation Styles. */
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes slideUp {
+	from { opacity: 0; transform: translateY(20px); }
+	to { opacity: 1; transform: translateY(0); }
+}

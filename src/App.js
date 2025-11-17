@@ -7,7 +7,8 @@ import HomePage from './components/HomePage/HomePage.js';
 import CalendarPage from './pages/CalendarPage';  // Import the new CalendarPage
 import Login from './components/Login/Login.jsx';
 import Register from './components/Register/Register.jsx';
-import Profile from './components/Profile/Profile.jsx';   // Import the Profile component
+import Profile from './components/Profile/Profile.jsx';
+import EntriesTimeline from './components/EntriesTimeline/EntriesTimeline.jsx';
 import GlobalStyles from './styles/GlobalStyles';
 
 import './App.css';
@@ -74,6 +75,7 @@ const App = () => (
 			<Routes>
 			  <Route path="/" element={<HomePage />} />
 			  <Route path="/calendar" element={<PrivateRoute element={<CalendarPage />} />} /> {/* Calendar Page Route */}
+			  <Route path="/entries" element={<EntriesTimeline />} />
 			  <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
 			  <Route path="/login" element={<Login />} />
 			  <Route path="/register" element={<Register />} />

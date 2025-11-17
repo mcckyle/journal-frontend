@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isSameDay } from 'date-fns';
+import EntryModal from "../EntryModal/EntryModal.jsx";
 import './Calendar.css';
 
 const Calendar = () => {
@@ -10,6 +11,8 @@ const Calendar = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [userId, setUserId] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [toastVisible, setToastVisible] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
   
   // New state for title and content.
   const [title, setTitle] = useState('');
@@ -126,6 +129,7 @@ const Calendar = () => {
 	  
 	  setCurrentEntryId(updatedEntry.id); //Update currentEntryId for future edits.
 	  setModalOpen(false);
+	  showToast(existingEntryId ? "Entry updated!" : "Entry saved!");
     }
 	catch (error)
 	{
@@ -208,6 +212,12 @@ const Calendar = () => {
   const handleMonthChange = (increment) => {
     setSelectedDate(addMonths(selectedDate, increment));
   };
+  
+  const showToast = (message) => {
+	  setToastMessage(message);
+	  setToastVisible(true);
+	  setTimeout(() => setToastVisible(false), 2000); //Auto-hide after 2 seconds.
+  };
 
   return (
     <div className="calendar-container">
@@ -236,34 +246,23 @@ const Calendar = () => {
 	 })}
 	</div>
 
-	{modalOpen && (
-	  <div className="modal-overlay" onClick={handleCloseModal}>
-	    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-		  <h3>Entry for {format(selectedDate, 'MMMM dd, yyyy')}</h3>
-		  <input
-		    type="text"
-			placeholder="Title"
-			value={title}
-			onChange={(e) => setTitle(e.target.value)}
-		  />
-		  <textarea
-		    placeholder="What are you grateful for today?"
-			value={content}
-			onChange={(e) => setContent(e.target.value)}
-		  />
-		  <div className="entry-actions">
-	        <button onClick={handleSaveEntry}>
-			  {currentEntryId ? 'Update Entry' : 'Save Entry'}
-		    </button>
-		    {currentEntryId && (
-		    <button onClick={handleDeleteEntry} className="delete-btn">
-		      Delete Entry
-		    </button>
-		  )}
-	    </div>
-	    <button className="modal-close-btn" onClick={handleCloseModal}>✕</button>
-    </div>
-   </div>
+	<EntryModal
+	  isOpen={modalOpen}
+	  onClose={handleCloseModal}
+	  onSave={handleSaveEntry}
+	  onDelete={currentEntryId ? handleDeleteEntry : null}
+	  title={title}
+	  setTitle={setTitle}
+	  content={content}
+	  setContent={setContent}
+	  isEditing={ ! ! currentEntryId}
+	  entryDateLabel={format(selectedDate, "MMMM dd, yyyy")}
+	  />
+  )}
+  {toastVisible && (
+    <div className="toast">
+	  {toastMessage}
+	</div>
   )}
   </div>
   );

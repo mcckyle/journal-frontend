@@ -1,0 +1,90 @@
+/*Filename: EntriesTimeline.css */
+
+.timeline-container {
+	max-width: 750px;
+	margin: 0 auto;
+	padding: 20px;
+}
+
+h1 {
+	text-align: center;
+	font-weight: 600;
+	margin-bottom: 20px;
+}
+
+.timeline-filters {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-bottom: 25px;
+}
+
+.timeline-filters input[type="text"] {
+	padding: 10px 14px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+	font-size: 15px;
+}
+
+.date-filters {
+	display: flex;
+	gap: 10px;
+}
+
+.date-filters input {
+	padding: 8px 12px;
+	border: 1px solid #ddd;
+	border-radius: 8px;
+}
+
+.timeline-list {
+	display: flex;
+	flex-direction: column;
+	gap: 25px;
+}
+
+.timeline-item {
+	display: flex;
+	gap: 15px;
+	align-items: flex-start;
+}
+
+.timeline-date {
+	font-weight: bold;
+	padding-top: 3px;
+	min-width: 140px;
+	opacity: 0.7;
+}
+
+.timeline-card {
+	flex: 1;
+	background: #fff;
+	padding: 15px 20px;
+	border-radius: 12px;
+	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+.timeline-card h3 {
+	margin: 0 0 6px 0;
+	font-size: 18px;
+}
+
+.timeline-card p {
+	margin-bottom: 12px;
+	color: #555;
+}
+
+.timeline-card button {
+	padding: 8px 14px;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	background: #4caf50;
+	color: white;
+	font-weight: 500;
+}
+
+.no-entries {
+	text-align: center;
+	opacity: 0.6;
+}
