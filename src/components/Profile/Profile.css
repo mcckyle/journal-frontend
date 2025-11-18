@@ -1,5 +1,9 @@
 /* Filename: src/components/Profile/Profile.css */
 
+.modalFade {
+	animation: fadeIn 0.25s ease-out;
+}
+
 @keyframes fadeIn
 {
 	from { opacity: 0; transform: translate(-50%, -45%); }

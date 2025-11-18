@@ -159,18 +159,20 @@ const EntriesTimeline = () => {
 	};
 	
 	return (
-	  <div className="timeline-container">
-	    <h1> All Journal Entries</h1>
+	  <div className="timeline-wrapper">
+	    <h1 className="timeline-title"> All Journal Entries</h1>
 		
+		{/* Filters */}
 		<div className="timeline-filters">
 		  <input
 		    type="text"
+			className="timeline-search"
 			placeholder="Search by title or keyword..."
 			value={search}
 			onChange={(e) => setSearch(e.target.value)}
 	      />
 		  
-		  <div className="date-filters">
+		  <div className="timeline-date-filters">
 		    <input
 			  type="date"
 			  value={startDate}
@@ -184,26 +186,31 @@ const EntriesTimeline = () => {
 		  </div>
 		</div>
 		
+		{/* Timeline List */}
 		<div className="timeline-list">
 			{filtered.length === 0 ? (
 			  <p className="no-entries">No entries found!</p>
 			) : (
 			  filtered.map((entry) => (
-				<div className="timeline-item" key={entry.id}>
-				  <div className="timeline-date">
+				<div className="timeline-entry" key={entry.id}>
+				  <div className="timeline-entry-date">
 					{format(new Date(entry.entryDate), "MMMM dd, yyyy")}
 				  </div>
+
 				  <div className="timeline-card">
 					<h3>{entry.title}</h3>
 					<p>{entry.content.substring(0, 150)}...</p>
-					<button onClick={() => openEdit(entry)}>Edit</button>
+					
+					<button className="timeline-edit-btn" onClick={() => openEdit(entry)}>
+					  Edit
+					</button>
 				  </div>
 				</div>
 			))
 		  )}
 		</div>
 		
-		{/* Reuse the Calendar Modal here. */}
+		{/* Modal. */}
 		<EntryModal
 		  isOpen={modalOpen}
 		  onClose={() => setModalOpen(false)}

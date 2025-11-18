@@ -23,20 +23,25 @@ const EntryModal = ({
 	return (
 	  <div className="entry-modal-overlay" onClick={onClose}>
 	    <div
-		  className="entry-modal-content"
+		  className="entry-modal-container"
 		  onClick={(e) => e.stopPropagation()}
 		>
 		  <h3 className="entry-modal-header">
-		  {entryDateLabel ? `Entry for ${entryDateLabel}` : "Edit Entry"}
+		    {entryDateLabel
+			  ? `Entry for ${entryDateLabel}`
+			  : isEditing
+			  ? "Edit Entry"
+			  : "New Entry"}
 		  </h3>
 		  
 		  <input
 		    type="text"
-			className="entry-modal-input"
 			placeholder="Title"
+			className="entry-modal-input"
 			value={title}
 			onChange={(e) => setTitle(e.target.value)}
 		  />
+
 		  <textarea
 		    className="entry-modal-textarea"
 		    placeholder="Write your thoughts..."
@@ -46,15 +51,16 @@ const EntryModal = ({
 		  
 		  <div className="entry-modal-actions">
 	        <button className="entry-modal-save" onClick={onSave}>
-			  {isEditing ? "Update Entry" : 'Save Entry'}
+			  {isEditing ? "Update Entry" : "Save Entry"}
 		    </button>
 			
 			{isEditing && (
 		      <button className="entry-modal-delete" onClick={onDelete}>
 		        Delete
 		      </button>
-		  )}
+		    )}
 	    </div>
+
 		<button className="entry-modal-close" onClick={onClose}>
 		  ✕
 		</button>

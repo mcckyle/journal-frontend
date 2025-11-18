@@ -1,6 +1,6 @@
 # 🌟 Gratitude Journal (React Frontend)
 
-Welcome to the **Gratitude Journal** frontend! This React-based web application enables users to reflect on their daily moments of gratitude, fostering a positive and mindful mindset. With a modern React stack and Material-UI, the frontend offers a sleek and user-friendly interface for seamless interaction.
+Welcome to the **Gratitude Journal** frontend! This React-based web application enables users to reflect on their daily moments of gratitude, fostering a positive and mindful mindset. With a modern React stack and Material-UI, the frontend offers a simple and modern interface for seamless interaction.
 
 ## ✨ Features
 - **User Authentication:** Secure user registration and login using JWT tokens.

@@ -1,9 +1,9 @@
 //Filename: src/components/Profile.jsx
 
-import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, Avatar, Button, Box, CircularProgress, Alert, Modal, TextField } from '@mui/material';
-import { deepPurple } from '@mui/material/colors';
-import './Profile.css'; // Import the CSS file
+import React, { useEffect, useState } from "react";
+import { Box, Avatar, Typography, Button, Modal, TextField, Alert, CircularProgress } from "@mui/material";
+import { deepPurple } from "@mui/material/colors";
+import "./Profile.css"; // Import the CSS file
 
 const Profile = () => {
 	const [user, setUser] = useState(null);
@@ -128,31 +128,33 @@ const Profile = () => {
   return (
     <Box
 	  sx={{
-		  width: "100%",
 		  minHeight: "100vh",
-	      background: "linear-gradient(160deg, #fffdf8, #f7f3ea)",
+		  width: "100%",
 		  display: "flex",
 		  justifyContent: "center",
 		  p: { xs: 2, md: 4 },
+		  background: "linear-gradient(160deg, #fffdf8, #f5efe2)"
 	  }}
 	>
 	  <Box
 		  sx={{
 			  width: "100%",
 			  maxWidth: "720px",
-			  borderRadius: "24px",
+			  display: "flex",
+			  flexDirection: "column",
+			  borderRadius: "28px",
 			  overflow: "hidden",
-			  boxShadow: "0 8px 28px rgba(0, 0, 0, 0.08)",
-			  background: "rgba(255, 255, 255, 0.6)",
-			  backdropFilter: "blur(16px)",
+			  background: "rgba(255, 255, 255, 0.55)",
+			  backdropFilter: "blur(18px)",
+			  boxShadow: "0 10px 32px rgba(0, 0, 0, 0.10)"
 		  }}
 	  >
 	    {/* Header Panel */}
 	    <Box
 		  sx={{
-			  background: "linear-gradient(135deg, #e8ddff, #d4c7ff)",
-			  p: { xs: 4, md: 6},
 			  textAlign: "center",
+			  p: { xs: 4, md: 6},
+			  background: "linear-gradient(140deg, #eae3ff, #d8cbff)"
 		  }}
 	    >
 		  <Avatar
@@ -162,11 +164,11 @@ const Profile = () => {
 				height: 110,
 				margin: "0 auto",
 				fontSize: '3rem',
-				boxShadow: "0 4px 16px rgba(0, 0, 0, 0.18)",
+				boxShadow: "0 6px 20px rgba(0, 0, 0, 0.18)",
 
 			}}
 		  >
-		  {user.username ? user.username.charAt(0).toUpperCase() : '?'}
+		    {user.username ? user.username.charAt(0).toUpperCase() : "?"}
 		</Avatar>
 		
 		<Typography variant="h4" sx={{ mt: 2, fontWeight: 700 }}>
@@ -179,23 +181,19 @@ const Profile = () => {
 		
 		<Typography
 		  variant="body2"
-		  sx={{
-			  fontStyle: "italic",
-			  opacity: 0.7,
-			  mt: 1,
-		    }}
-		  >
-			{ user.bio || 'Grateful every day. 🌸'}
+		  sx={{ mt: 1, opacity: 0.7, fontStyle: "italic" }}
+		>
+		  { user.bio || "Grateful every day. 🌸"}
 		</Typography>
 	  </Box>
 	  
-	  {/* Content Panel. */}
+	  {/* Controls. */}
 	  <Box sx={{ p: { xs: 3, md: 4 }, textAlign: "center" }}>
 	    <Box
 		  sx={{
 			  display: "flex",
 			  justifyContent: "center",
-			  gap: 2,
+			  gap: 2
 		  }}
 		>
           <Button variant="outlined" onClick={handleOpenEdit}>
@@ -210,19 +208,18 @@ const Profile = () => {
 	
 	{/* Modal */}
 	<Modal open={openEdit} onClose={handleCloseEdit}>
-	  <Box
+	  <Box className="modalFade"
 	    sx={{
 			position: "absolute",
 			top: "50%",
 			left: "50%",
 			width: "90%",
-			maxWidth: "460px",
+			maxWidth: "480px",
 			transform: "translate(-50%, -50%)",
 			background: "#ffffff",
-			borderRadius: "20px",
+			borderRadius: "22px",
 			p: 4,
-			boxShadow: "0 8px 24px rgba(0, 0, 0, 0.15)",
-			animation: "fadeIn 0.25s ease-out",
+			boxShadow: "0 10px 32px rgba(0, 0, 0, 0.15)"
 		}}
 	  >
 	    <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
@@ -262,17 +259,13 @@ const Profile = () => {
 		  <Button variant="outlined" onClick={handleCloseEdit}>
 		    Cancel
 		  </Button>
-		  <Button
-		    variant="contained"
-			onClick={handleSaveChanges}
-			disabled={saving}
-		  >
+		  <Button variant="contained" onClick={handleSaveChanges} disabled={saving}>
 		    {saving ? "Saving..." : "Save Changes"}
 		  </Button>
 		 </Box>
 		</Box>
 	  </Modal>  
-  </Box>
+    </Box>
   );
 };
 

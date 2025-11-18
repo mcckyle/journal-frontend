@@ -1,90 +1,123 @@
 /*Filename: EntriesTimeline.css */
 
-.timeline-container {
-	max-width: 750px;
+/* Outer Wrapper Styles. */
+.timeline-wrapper {
+	max-width: 760px;
 	margin: 0 auto;
-	padding: 20px;
+	padding: 28px;
+	background: transparent;
 }
 
-h1 {
+/* Header Styles. */
+.timeline-title {
 	text-align: center;
-	font-weight: 600;
-	margin-bottom: 20px;
+	font-weight: 700;
+	font-size: 2rem;
+	margin-bottom: 26px;
+	color: #333;
 }
 
+/* Filters Section Styles. */
 .timeline-filters {
 	display: flex;
 	flex-direction: column;
-	gap: 12px;
-	margin-bottom: 25px;
+	gap: 14px;
+	margin-bottom: 28px;
 }
 
-.timeline-filters input[type="text"] {
-	padding: 10px 14px;
-	border: 1px solid #ddd;
-	border-radius: 8px;
-	font-size: 15px;
+.timeline-search {
+	padding: 12px 16px;
+	border: 1px solid #d9d9d9;
+	border-radius: 10px;
+	font-size: 16px;
+	background: #ffffffcc;
+	backdrop-filter: blur(5px);
 }
 
-.date-filters {
+.timeline-date-filters {
 	display: flex;
-	gap: 10px;
+	gap: 12px;
 }
 
-.date-filters input {
-	padding: 8px 12px;
-	border: 1px solid #ddd;
-	border-radius: 8px;
+.timeline-date-filters input {
+	padding: 10px 14px;
+	border: 1px solid #d9d9d9;
+	border-radius: 10px;
+	font-size: 15px;
+	background: #ffffffdd;
+	flex: 1;
 }
 
+/* Timeline List Styles. */
 .timeline-list {
 	display: flex;
 	flex-direction: column;
-	gap: 25px;
-}
-
-.timeline-item {
-	display: flex;
-	gap: 15px;
-	align-items: flex-start;
-}
-
-.timeline-date {
-	font-weight: bold;
-	padding-top: 3px;
-	min-width: 140px;
-	opacity: 0.7;
-}
-
-.timeline-card {
-	flex: 1;
-	background: #fff;
-	padding: 15px 20px;
-	border-radius: 12px;
-	box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-}
-
-.timeline-card h3 {
-	margin: 0 0 6px 0;
-	font-size: 18px;
-}
-
-.timeline-card p {
-	margin-bottom: 12px;
-	color: #555;
-}
-
-.timeline-card button {
-	padding: 8px 14px;
-	border: none;
-	border-radius: 8px;
-	cursor: pointer;
-	background: #4caf50;
-	color: white;
-	font-weight: 500;
+	gap: 28px;
 }
 
 .no-entries {
 	text-align: center;
-	opacity: 0.6;
+	opacity: 0.65;
+	font-size: 1.05rem;
+	margin-top: 20px;
+}
+
+/* Entry Row Styles. */
+.timeline-entry {
+	display: flex;
+	gap: 18px;
+	align-items: flex-start;
+}
+
+.timeline-entry-date {
+	min-width: 150px;
+	font-weight: 600;
+	opacity: 0.7;
+	padding-top: 4px;
+	font-size: 0.95rem;
+}
+
+/* Card Styles. */
+.timeline-card {
+	flex: 1;
+	background: rgba(255, 255, 255, 0.75);
+	padding: 20px;
+	border-radius: 16px;
+	backdrop-filter: blur(8px);
+	box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
+	
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.timeline-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+.timeline-card h3 {
+	margin: 0 0 8px 0;
+	font-size: 19px;
+	font-weight: 600;
+}
+
+.timeline-card p {
+	margin-bottom: 14px;
+	color: #444;
+	line-height: 1.45;
+}
+
+/* Edit Button Styles. */
+.timeline-edit-btn {
+	padding: 9px 16px;
+	border: none;
+	border-radius: 10px;
+	background: #6c63ff;
+	color: #fff;
+	cursor: pointer;
+	font-weight: 500;
+	font-size: 0.95rem;
+}
+
+.timeline-edit-btn:hover {
+	background: #5a54e3;
 }

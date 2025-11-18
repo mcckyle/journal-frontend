@@ -258,7 +258,6 @@ const Calendar = () => {
 	  isEditing={ ! ! currentEntryId}
 	  entryDateLabel={format(selectedDate, "MMMM dd, yyyy")}
 	  />
-  )}
   {toastVisible && (
     <div className="toast">
 	  {toastMessage}
