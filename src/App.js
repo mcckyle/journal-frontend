@@ -4,15 +4,17 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header/Header.js';
 import HomePage from './components/HomePage/HomePage.js';
-import CalendarPage from './pages/CalendarPage';  // Import the new CalendarPage
+import CalendarPage from './components/Calendar/CalendarPage';  // Import the new CalendarPage
 import Login from './components/Login/Login.jsx';
 import Register from './components/Register/Register.jsx';
 import Profile from './components/Profile/Profile.jsx';
 import EntriesTimeline from './components/EntriesTimeline/EntriesTimeline.jsx';
+import Settings from './components/Settings/Settings.jsx';
 import GlobalStyles from './styles/GlobalStyles';
 
 import './App.css';
 
+//Check Token Validity.
 const isAuthenticated = async () => {
   const token = localStorage.getItem('token');
   
@@ -23,9 +25,7 @@ const isAuthenticated = async () => {
   
   try {
 	  const response = await fetch('http://localhost:8080/api/auth/validate', {
-		  headers: {
-			  Authorization: `Bearer ${token}`,
-		  },
+		  headers: { Authorization: `Bearer ${token}` },
 	  });
 	  
 	  if (!response.ok)
@@ -38,7 +38,7 @@ const isAuthenticated = async () => {
   }
   catch (error)
   {
-	  console.error('Token validation failed:', error);
+	  console.error('Token validation failed: ', error);
 	  return false;
   }
 };
@@ -54,12 +54,7 @@ const PrivateRoute = ({ element }) => {
 	if (authorized === null)
 	{
 		return (
-		  <div style={{
-			  display: 'flex', justifyContent: 'center', alignItems: 'center',
-			  height: '80vh', fontSize: '1.1rem', color: '#555'
-		  }}>
-		    Checking session...
-		  </div>
+		  <div className="loading-screen">Checking session...</div>
 		);
 	}
 	
@@ -79,6 +74,7 @@ const App = () => (
 			  <Route path="/profile" element={<PrivateRoute element={<Profile />} />} />
 			  <Route path="/login" element={<Login />} />
 			  <Route path="/register" element={<Register />} />
+			  <Route path="/settings" element={<Settings />} />
 			  <Route path="*" element={<h2>404 - Page Not Found</h2>} /> {/* Handle undefined routes */}
 			</Routes>
 		</main>

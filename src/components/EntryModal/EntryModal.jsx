@@ -1,12 +1,13 @@
 //Filename: EntryModal.jsx
 
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "./EntryModal.css";
 
 const EntryModal = ({
 	isOpen,
 	onClose,
 	onSave,
+	onAutosave,
 	onDelete,
 	entryDateLabel,
 	title,
@@ -15,6 +16,39 @@ const EntryModal = ({
 	setContent,
 	isEditing
 }) => {
+	const [saveStatus, setSaveStatus] = useState(""); //"Saving..." || "Saved ✓" || "".
+	const autosaveTimer = useRef(null);
+	
+	//Debounced Autosave - triggers two seconds after typing.
+	useEffect(() => {
+		if ( ! isOpen)
+		{
+			return; //Cannot use null inside useEffect(), React expects nothing or a cleanup function.
+		}
+		
+		setSaveStatus("Saving...");
+		clearTimeout(autosaveTimer.current);
+		
+		autosaveTimer.current = setTimeout(async () => {
+			//await onAutosave(); //Reuse parent save handler.
+			if (onAutosave)
+			{
+				await onAutosave();
+			}
+			else
+			{
+				await onSave();
+			}
+
+			setSaveStatus("Saved ✓");
+			
+			//Clear the status after two seconds have passed.
+			setTimeout(() => setSaveStatus(""), 2000);
+		}, 2000);
+		
+		return () => clearTimeout(autosaveTimer.current);
+	}, [title, content, isOpen]);
+	
 	if ( ! isOpen)
 	{
 		return null;
@@ -34,10 +68,15 @@ const EntryModal = ({
 			  : "New Entry"}
 		  </h3>
 		  
+		  {/* Autosave Status */}
+		  {saveStatus && (
+		    <div className="entry-modal-status">{saveStatus}</div>
+		  )}
+		  
 		  <input
 		    type="text"
-			placeholder="Title"
 			className="entry-modal-input"
+			placeholder="Title"
 			value={title}
 			onChange={(e) => setTitle(e.target.value)}
 		  />

@@ -2,12 +2,12 @@
 
 .calendar-container {
   width: 100%;
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 2.2rem 2.5rem 3rem;
-  box-shadow: var(--shadow);
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 2.4rem 2.6rem 3rem;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
   
-  transition: var(--transition);
+  transition: 0.25s ease;
 }
 
 /* Header Controls Styles. */
@@ -15,28 +15,32 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 1.8rem;
+	margin-bottom: 2rem;
 }
 
 .calendar-header h2 {
-	font-size: 1.7rem;
 	margin: 0;
+	font-size: 1.7rem;
 	font-weight: 600;
-	color: var(--color-text);
+	color: #1e293b;
 }
 
 .calendar-header button {
   background: var(--color-primary);
   color: #fff;
   border: none;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   cursor: pointer;
-  box-shadow: var(--shadow);
   
-  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0, 119, 182, 0.22);
+  
+  transition: transform 0.22s ease, background 0.22s ease;
 }
 
 .calendar-header button:hover {
@@ -48,66 +52,72 @@
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);  /* Ensures 7 columns for 7 days */
-  gap: 12px;
-  margin-bottom: 25px;
+  gap: 14px;
 }
 
 .calendar-day {
   padding: 16px 0;
-  border-radius: var(--radius);
-  background: #fafafa;
-  cursor: pointer;
-  font-weight: 500;
-  color: var(--color-text);
-  text-align: center;
-  box-shadow: inset 0 0 0 1px #eaeaea;
+  border-radius: 12px;
   
-  transition: var(--transition);
+  background: #f7f9fc;
+  font-weight: 500;
+  color: #334155;
+  text-align: center;
+  
+  cursor: pointer;
+  user-select: none;
+  
+  box-shadow: inset 0 0 0 1px #e8e8e8;
+  
+  transition: 0.22s ease;
 }
 
 .calendar-day:hover {
-  background: #fff;
+  background: #ffffff;
   box-shadow: inset 0 0 0 1px var(--color-primary);
   transform: translateY(-2px);
 }
 
 /* Today Indicator Styles. */
 .calendar-day.today {
+	background: #eef7ff;
 	border: 2px solid var(--color-primary);
-	background: #f0f7ff;
 }
 
 /* User-Selected Day Styles. */
 .calendar-day.selected {
 	background: var(--color-primary);
-	color: #fff;
+	color: #ffffff;
 	font-weight: 600;
-	box-shadow: 0 6px 18px rgba(0, 119, 182, 0.25);
+	
+	box-shadow: 0 6px 18px rgba(0, 119, 182, 0.24);
 }
 
-/* Day That Has a Gratitude Entry Styles. */
+/* Has An Entry Styles. */
 .calendar-day.has-entry {
-	background: #f3fbf3;
+	background: #f2fbf3;
 	border: 1px solid var(--color-accent);
-	box-shadow: 0 0 10px rgba(34, 167, 69, 0.25);
+	color: #265f2b;
 	font-weight: 600;
 }
 
 /* Toast Notifications Styles. */
 .toast {
 	position: fixed;
-	bottom: 40px;
+	bottom: 38px;
 	left: 50%;
 	transform: translateX(-50%);
-	background: rgba(40, 40, 40, 0.85);
+	
 	padding: 14px 28px;
-	border-radius: var(--radius);
+	border-radius: 12px;
+	
+	background: rgba(30, 41, 59, 0.88);
 	color: #fff;
 	font-size: 1rem;
 	z-index: 9999;
-	box-shadow: var(--shadow);
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 	
-	animation: fadeInOut 2.4s ease;
+	animation: fadeInOut 2.4s ease both;
 }
 
 /* Fade And Slide Animation Styles. */

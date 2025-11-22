@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
+import { parseLocalDate } from "../../utils/parseLocalDate";
 import EntryModal from "../EntryModal/EntryModal.jsx";
 import "./EntriesTimeline.css";
 
@@ -101,6 +102,48 @@ const EntriesTimeline = () => {
     }
   };
   
+  //Autosave handler function.
+  const handleAutosaveFromTimeline = async () => {
+	if ( ! editingEntry)
+	{
+		return;
+	}
+
+	try {
+		const updatedData = {
+			entryDate: editingEntry.entryDate,
+			title: editingEntry.title,
+			content: editingEntry.content,
+			userId,
+		};
+
+      const response = await fetch(
+	    `http://localhost:8080/api/calendar/${editingEntry.id}`,
+		{
+			method: "PUT",
+			headers: {
+			  "Content-Type": "application/json",
+			   Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify(updatedData),
+		}
+      );
+
+      if ( ! response.ok) throw new Error("Autosave failed!");
+	  
+	  const updatedEntry = await response.json();
+
+      // Update local UI state.
+	  setEntries((prev) =>
+	    prev.map((e) => (e.id === updatedEntry.id ? updatedEntry : e))
+	  );
+    }
+	catch (error)
+	{
+      console.error('Autosave update error:', error);
+    }
+  };
+  
     //Delete an entry.
     const handleDeleteFromTimeline = async () => {
 	  if ( ! editingEntry)
@@ -144,10 +187,10 @@ const EntriesTimeline = () => {
 			entry.title.toLowerCase().includes(search.toLowerCase()) ||
 			entry.content.toLowerCase().includes(search.toLowerCase());
 			
-		const date = new Date(entry.entryDate);
+		const date = parseLocalDate(entry.entryDate);
 		
-		const matchesStart = startDate ? date >= new Date(startDate) : true;
-		const matchesEnd = endDate ? date <= new Date(endDate) : true;
+		const matchesStart = startDate ? date >= parseLocalDate(startDate) : true;
+		const matchesEnd = endDate ? date <= parseLocalDate(endDate) : true;
 		
 		return matchesSearch && matchesStart && matchesEnd;
 	});
@@ -160,14 +203,15 @@ const EntriesTimeline = () => {
 	
 	return (
 	  <div className="timeline-wrapper">
-	    <h1 className="timeline-title"> All Journal Entries</h1>
+	  
+	    <h1 className="timeline-title">Journal Timeline</h1>
 		
 		{/* Filters */}
 		<div className="timeline-filters">
 		  <input
 		    type="text"
 			className="timeline-search"
-			placeholder="Search by title or keyword..."
+			placeholder="Search entries..."
 			value={search}
 			onChange={(e) => setSearch(e.target.value)}
 	      />
@@ -189,20 +233,23 @@ const EntriesTimeline = () => {
 		{/* Timeline List */}
 		<div className="timeline-list">
 			{filtered.length === 0 ? (
-			  <p className="no-entries">No entries found!</p>
+			  <p className="no-entries">No matching entries</p>
 			) : (
 			  filtered.map((entry) => (
 				<div className="timeline-entry" key={entry.id}>
 				  <div className="timeline-entry-date">
-					{format(new Date(entry.entryDate), "MMMM dd, yyyy")}
+					{format(parseLocalDate(entry.entryDate), "MMMM dd, yyyy")}
 				  </div>
 
 				  <div className="timeline-card">
 					<h3>{entry.title}</h3>
 					<p>{entry.content.substring(0, 150)}...</p>
 					
-					<button className="timeline-edit-btn" onClick={() => openEdit(entry)}>
-					  Edit
+					<button
+					  className="timeline-edit-btn"
+					  onClick={() => openEdit(entry)}
+					>
+					  Edit Entry
 					</button>
 				  </div>
 				</div>
@@ -215,6 +262,7 @@ const EntriesTimeline = () => {
 		  isOpen={modalOpen}
 		  onClose={() => setModalOpen(false)}
 		  onSave={handleSaveFromTimeline}
+		  onAutosave={handleAutosaveFromTimeline}
 		  onDelete={handleDeleteFromTimeline}
 		  title={editingEntry?.title || ""}
 		  setTitle={(v) => setEditingEntry({ ...editingEntry, title: v })}
@@ -223,7 +271,7 @@ const EntriesTimeline = () => {
 		  isEditing={true}
 		  entryDateLabel={
 			  editingEntry?.entryDate
-			  ? format(new Date(editingEntry.entryDate), "MMMM dd, yyyy")
+			  ? format(parseLocalDate(editingEntry.entryDate), "MMMM dd, yyyy")
 			  : ""
 		  }
 		/>

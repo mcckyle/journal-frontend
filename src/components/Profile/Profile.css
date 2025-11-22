@@ -1,11 +1,107 @@
 /* Filename: src/components/Profile/Profile.css */
 
+/* Center Utility Styles. */
+.center-screen {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
+
+/* Page Background Styles. */
+.profile-page {
+	min-height: 100vh;
+	display: flex;
+	justify-content: center;
+	padding: 32px;
+	
+	background: linear-gradient(165deg, #fffdf9, #f3ede1);
+}
+
+/* Profile Card Styles. */
+.profile-card {
+	width: 100%;
+	max-width: 720px;
+	background: rgba(255, 255, 255, 0.55);
+	backdrop-filter: blur(18px);
+	border-radius: 26px;
+	box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+	overflow: hidden;
+}
+
+/* Header Section Styles. */
+.profile-header {
+	text-align: center;
+	padding: 48px 24px;
+	background: linear-gradient(145deg, #e9e3ff, #d6c9ff);
+}
+
+.profile-username {
+	margin-top: 18px;
+	font-size: 2rem;
+	font-weight: 700;
+}
+
+.profile-email {
+	opacity: 0.8;
+	font-size: 1rem;
+}
+
+.profile-bio {
+	margin-top: 10px;
+	opacity: 0.72;
+	font-style: italic;
+}
+
+/* Action Buttons Styles. */
+.profile-actions {
+	padding: 28px;
+	display: flex;
+	justify-content: center;
+	gap: 18px;
+}
+
+/* Modal Panel Styles. */
+.profile-modal {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	
+	width: 92%;
+	max-width: 460px;
+	
+	transform: translate(-50%, -50%);
+	background: rgba(255, 255, 255, 0.96);
+	border-radius: 22px;
+	
+	padding: 32px;
+	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+	backdrop-filter: blur(14px);
+}
+
+/* Modal Title Styles. */
+.modal-title {
+	font-size: 1.45rem;
+	font-weight: 700;
+	margin-bottom: 8px;
+	text-align: center;
+}
+
+/* Modal Buttons Styles. */
+.modal-actions {
+	margin-top: 22px;
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+}
+
+/* Fade In Animation Styles. */
 .modalFade {
 	animation: fadeIn 0.25s ease-out;
 }
 
 @keyframes fadeIn
 {
-	from { opacity: 0; transform: translate(-50%, -45%); }
+	from { opacity: 0; transform: translate(-50%, -46%); }
 	to { opacity: 1; transform: translate(-50%, -50%); }
 }

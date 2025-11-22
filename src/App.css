@@ -14,30 +14,36 @@
 	width: 100%;
 	max-width: 1200px;
 	margin: 0 auto;
-	padding: 2rem 1rem;
+	padding: var(--space-lg) var(--space-md);
 	
-	animation: fadeInPage 0.35s ease both;
+	animation: fadeInPage 0.4s ease both;
 }
 
 h2
 {
 	text-align: center;
-	color: #1e293b;
+	color: var(--color-text);
 	font-weight: 600;
-	margin-top: 3rem;
-	margin-bottom: 2rem;
+	margin: var(--space-xl) 0 var(--space-lg);
 	font-size: 1.75rem;
 }
 
+.loading-screen {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 80vh;
+	font-size: 1.2rem;
+	color: var(--color-muted);
+}
+
+/* Fade-in Page Animation Styles. */
 @keyframes fadeInPage {
-	from { opacity: 0; transform: translateY(8px); }
+	from { opacity: 0; transform: translateY(12px); }
 	to { opacity: 1; transform: translateY(0); }
 }
 
 @media (max-width: 768px)
 {
-	.main-content
-	{
-		padding: 1.25rem;
-	}
+	.main-content { padding: var(--space-md); }
 }

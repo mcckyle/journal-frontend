@@ -1,10 +1,10 @@
 /* Filename: src/components/Header/Header.css */
 
 .header {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  box-shadow: var(--shadow);
-  padding: 0.85rem 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(14px) saturate(1.5);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-sm) var(--space-lg);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -21,8 +21,9 @@
 .logo-text {
 	font-size: 1.4rem;
 	font-weight: 700;
-	letter-spacing: 0.5px;
 	color: var(--color-text);
+	
+	transition: var(--transition);
 }
 
 .logo-text:hover {
@@ -31,23 +32,25 @@
 
 .nav-links {
   display: flex;
-  gap: 1.75rem;
+  gap: var(--space-md);
 }
 
 .nav-link {
   color: var(--color-text);
   font-weight: 500;
   position: relative;
+  
+  transition: var(--transition);
 }
 
 .nav-link::after {
 	content: "";
 	position: absolute;
-	width: 0%;
+	width: 0;
 	height: 2px;
-	left: 0;
 	bottom: -4px;
-	background-color: var(--color-primary);
+	left: 0;
+	background: var(--color-primary);
 	
 	transition: width 0.25s ease;
 }
@@ -60,22 +63,24 @@
 	width: 100%;
 }
 
-.auth-actions {
-  display: flex;
-  gap: 0.6rem;
+/* Auth / User Avatar Section Styles */
+.auth-section {
+	display: flex;
+	align-items: center;
+	gap: var(--space-xs);
 }
 
 /* Buttons Styles. */
 .btn {
-  padding: 0.55rem 1.15rem;
+  padding: var(--space-sm) var(--space-md);
   border-radius: var(--radius);
-  box-shadow: var(--shadow);
   font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .auth-btn {
 	background: var(--color-primary);
-	color: white;
+	color: #fff;
 }
 
 .auth-btn:hover {
@@ -91,12 +96,90 @@
   background: #1b8735;
 }
 
+/* Avatar Styles. */
+.avatar-wrapper {
+	position: relative;
+	cursor: pointer;
+}
+
+.avatar-circle {
+	width: 42px;
+	height: 42px;
+	background: var(--color-primary);
+	color: white;
+	font-weight: 700;
+	font-size: 1.1rem;
+	border-radius: 50%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-shadow: var(--shadow-sm);
+	
+	transition: transform 0.15s ease;
+}
+
+.avatar-circle:hover {
+	transform: scale(1.06);
+}
+
+/* Avatar Dropdown Menu Styles. */
+.avatar-menu {
+	position: absolute;
+	right: 0;
+	top: 54px;
+	background: white;
+	border-radius: 14px;
+	padding: 8px 0;
+	width: 160px;
+	box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+	
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-6px);
+	
+	transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.avatar-menu.open {
+	opacity: 1;
+	pointer-events: auto;
+	transform: translateY(0);
+}
+
+.avatar-menu-item {
+	display: block;
+	padding: 10px 14px;
+	text-align: left;
+	font-size: 0.95rem;
+	color: var(--color-text);
+	border-radius: 6px;
+	margin: 2px 6px;
+	
+	transition: background 0.15s ease;
+}
+
+.avatar-menu-item:hover {
+	background: rgba(0, 0, 0, 0.05);
+}
+
+.avatar-menu-item.logout {
+	color: #e55353;
+}
+
+.avatar-menu-item.logout:hover {
+	background: rgba(229, 83, 83, 0.12);
+}
+
+/* Divider Inside the Avatar Dropdown Styles. */
+.avatar-menu-divider {
+	height: 1px;
+	width: 100%;
+	background: rgba(0, 0, 0, 0.08);
+	margin: 6px 0;
+}
+
 @media (max-width: 768px)
 {
-	.nav-links {
-		display: none;
-	}
-
 	.logo-text {
 		font-size: 1.15rem;
 	}

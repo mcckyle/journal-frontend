@@ -2,122 +2,158 @@
 
 /* Outer Wrapper Styles. */
 .timeline-wrapper {
-	max-width: 760px;
+	max-width: 860px;
 	margin: 0 auto;
-	padding: 28px;
-	background: transparent;
+	padding: 48px 22px 80px;
+	
+	animation: fadeInSoft 0.55s ease both;
 }
 
-/* Header Styles. */
+/* Title Styles. */
 .timeline-title {
 	text-align: center;
 	font-weight: 700;
-	font-size: 2rem;
-	margin-bottom: 26px;
-	color: #333;
+	font-size: 2.35rem;
+	margin-bottom: 42px;
+	color: var(--color-text);
 }
 
 /* Filters Section Styles. */
 .timeline-filters {
+	background: rgba(255, 255, 255, 0.78);
+	backdrop-filter: blur(12px);
+	padding: 22px 22px 26px;
+	border-radius: var(--radius);
+	margin-bottom: 42px;
 	display: flex;
 	flex-direction: column;
-	gap: 14px;
-	margin-bottom: 28px;
+	gap: 18px;
 }
 
-.timeline-search {
+.timeline-search,
+.timeline-date-filters input {
 	padding: 12px 16px;
-	border: 1px solid #d9d9d9;
-	border-radius: 10px;
-	font-size: 16px;
-	background: #ffffffcc;
-	backdrop-filter: blur(5px);
+	border-radius: var(--radius);
+	border: 1px solid #d7dbe0;
+	background: #ffffffdd;
+	font-size: 1rem;
 }
 
 .timeline-date-filters {
 	display: flex;
-	gap: 12px;
-}
-
-.timeline-date-filters input {
-	padding: 10px 14px;
-	border: 1px solid #d9d9d9;
-	border-radius: 10px;
-	font-size: 15px;
-	background: #ffffffdd;
-	flex: 1;
+	gap: 14px;
 }
 
 /* Timeline List Styles. */
 .timeline-list {
 	display: flex;
 	flex-direction: column;
-	gap: 28px;
+	gap: 38px;
 }
 
 .no-entries {
 	text-align: center;
 	opacity: 0.65;
-	font-size: 1.05rem;
-	margin-top: 20px;
+	margin-top: 12px;
+	font-size: 1.1rem;
 }
 
 /* Entry Row Styles. */
 .timeline-entry {
 	display: flex;
-	gap: 18px;
-	align-items: flex-start;
+	gap: 26px;
+	position: relative;
 }
 
+/* Date Column Styles. */
 .timeline-entry-date {
-	min-width: 150px;
+	min-width: 170px;
 	font-weight: 600;
-	opacity: 0.7;
-	padding-top: 4px;
-	font-size: 0.95rem;
+	font-size: 1rem;
+	color: var(--color-muted);
+	padding-top: 6px;
+}
+
+/* Vertical Line for Visual Continuity Styles. */
+.timeline-entry::before {
+	content: "";
+	position: absolute;
+	left: 82px;
+	top: 32px;
+	width: 2px;
+	height: calc(100% - 32px);
+	background: rgba(0, 0, 0, 0.06);
+	border-radius: 2px;
 }
 
 /* Card Styles. */
 .timeline-card {
 	flex: 1;
-	background: rgba(255, 255, 255, 0.75);
-	padding: 20px;
-	border-radius: 16px;
+	padding: 24px 26px;
+	border-radius: var(--radius);
+	background: linear-gradient(150deg, #ffffffee, #fafafaee);
 	backdrop-filter: blur(8px);
-	box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
 	
-	transition: transform 0.15s ease, box-shadow 0.15s ease;
+	transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
 .timeline-card:hover {
 	transform: translateY(-3px);
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 10px 36px rgba(0, 0, 0, 0.12);
 }
 
 .timeline-card h3 {
-	margin: 0 0 8px 0;
-	font-size: 19px;
+	margin: 0 0 8px;
+	font-size: 1.18rem;
 	font-weight: 600;
+	color: var(--color-text);
 }
 
 .timeline-card p {
-	margin-bottom: 14px;
-	color: #444;
-	line-height: 1.45;
+	margin-bottom: 18px;
+	color: var(--color-muted);
+	line-height: 1.62;
 }
 
 /* Edit Button Styles. */
 .timeline-edit-btn {
-	padding: 9px 16px;
+	padding: 10px 18px;
 	border: none;
-	border-radius: 10px;
-	background: #6c63ff;
+	border-radius: 12px;
+	background: var(--color-primary);
 	color: #fff;
 	cursor: pointer;
-	font-weight: 500;
-	font-size: 0.95rem;
+	font-weight: 600;
+	font-size: 0.96rem;
+	
+	transition: transform 0.18s ease, background 0.18s ease;
 }
 
 .timeline-edit-btn:hover {
-	background: #5a54e3;
+	transform: translateY(-2px);
+	background: var(--color-primary-dark);
+}
+
+/* Fade Animation Styles. */
+@keyframes fadeInSoft {
+	from { opacity: 0; transform: translateY(18px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+/* Media Query Styles. */
+@media (max-width: 720px)
+{
+	.timeline-entry {
+		flex-direction: column;
+	}
+	
+	.timeline-entry-date {
+		min-width: auto;
+		padding-bottom: 6px;
+	}
+	
+	.timeline-entry::before {
+		display: none;
+	}
 }

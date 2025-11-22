@@ -1,0 +1,67 @@
+/* Filename: src/components/ConfirmModal/ConfirmModal.css */
+
+.confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.confirm-modal {
+	background: var(--color-bg);
+	padding: 1.8rem;
+	border-radius: 14px;
+	width: min(92%, 380px);
+	box-shadow: var(--shadow-lg);
+	
+	animation: fadeUp 0.18s ease-out;
+}
+
+.confirm-title {
+	font-size: var(--font-size-title);
+	margin-bottom: 0.4rem;
+}
+
+.confirm-message {
+	font-size: var(--font-size-base);
+	opacity: 0.85;
+	margin-bottom: 1.4rem;
+}
+
+.confirm-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 0.8rem;
+}
+
+.confirm-btn {
+	padding: 0.55rem 0.95rem;
+	border-radius: 8px;
+	border: none;
+	cursor: pointer;
+	font-size: var(--font-size-base);
+	
+	transition: opacity 0.15s;
+}
+
+.confirm-btn.cancel {
+	background: var(--btn-secondary-bg);
+}
+
+.confirm-btn.confirm {
+	background: black;
+	color: white;
+}
+
+.confirm-btn:hover {
+	opacity: 0.85;
+}
+
+@keyframes fadeUp {
+	from { opacity: 0; transform: translateY(6px); }
+	from { opacity: 1; transform: translateY(0); }
+}
