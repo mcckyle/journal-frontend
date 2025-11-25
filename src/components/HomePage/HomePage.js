@@ -1,9 +1,10 @@
 //Filename: src/components/HomePage/HomePage.js
 
 import React, { useState, useEffect } from "react";
-import styled, { keyframes } from "styled-components";
 import { Link, useNavigate } from "react-router-dom";
 import { parseLocalDate } from "../../utils/parseLocalDate";
+
+import "./HomePage.css";
 
 //Small built-in list of positive affirmations.
 const affirmations = [
@@ -60,20 +61,43 @@ const HomePage = () => {
 			  const data = await response.json();
 			  setEntries(data.slice(-3).reverse());
 			  
-			  //Compute the user's streak.
-			  const dates = data.map(e => e.entryDate);
-			  const today = new Date().toISOString().split("T")[0];
+			  //Compute the user's streak based on consecutive days with
+			  //at least one entry.
+			  const uniqueDates = Array.from(
+			    new Set(data.map(e => parseLocalDate(e.entryDate)))
+			  );
 			  
-			  let count = 0;
-			  let current = new Date(today);
+			  //Sort dates from newest -> oldest.
+			  uniqueDates.sort((a, b) => new Date(b) - new Date(a));
 			  
-			  while (dates.includes(current.toISOString().split("T")[0]))
+			  //Start from today.
+			  let streakCount = 0;
+			  let currentDate = new Date();
+			  let currentDateStr = currentDate.toISOString().split("T")[0];
+			  
+			  //If no entry today, shift starting point to yesterday.
+			  if ( ! uniqueDates.includes(currentDateStr))
 			  {
-				  count ++;
-				  current.setDate(current.getDate() - 1);
+				  currentDate.setDate(currentDate.getDate() - 1);
 			  }
 			  
-			  setStreak(count);
+			  //Step through consecutive days.
+			  while (true)
+			  {
+				  currentDateStr = currentDate.toISOString().split("T")[0];
+				  
+				  if (uniqueDates.includes(currentDateStr))
+				  {
+					  streakCount ++;
+					  currentDate.setDate(currentDate.getDate() - 1);
+				  }
+				  else
+				  {
+					  break;
+				  }
+			  }
+			  
+			  setStreak(streakCount);
 		  }
 		  catch (error)
 		  {
@@ -87,262 +111,59 @@ const HomePage = () => {
   const handleQuickEntry = () => navigate("/calendar?new-entry=true");
   
   return (
-	  <MainContainer>
+	  <div className="home-main">
 	  
 	  {/* Welcome Panel */}
-	    <HeroSection>
-			<Overlay />
-			<Content>
+	    <section className="hero">
+			<div className="hero-overlay"></div>
+			<div className="hero-content">
 			  <h1>Welcome Back</h1>
 			  <p>Your space to reflect, grow, and cherish the moments that matter.</p>
-			  <StartButton to="/calendar">Begin Your Journey</StartButton>
-			</Content>
-		</HeroSection>
+			  <Link to="/calendar" className="start-button">Begin Your Journey</Link>
+			</div>
+		</section>
 		
 		{/* Dashboard */}
-		<DashboardSection>
-		
-		{/* Today's Prompt */}
-		<Card>
-		  <h3>Today's Reflection Prompt</h3>
-		  <p>{prompt}</p>
-		  <QuickAddButton onClick={handleQuickEntry}>
-		    Write a New Entry
-          </QuickAddButton>
-        </Card>
-		
-		{/* Last Three Entries */}
-		<Card>
-		  <h3>Recent Entries</h3>
-		  {entries.length === 0 ? (
-		    <EmptyState>No entries yet.</EmptyState>
-		  ) : (
-		    entries.map((e, index) => (
-			  <EntryPreview key={index} to={`/entries#${e.id}`}>
-			    <span>{parseLocalDate(e.entryDate)}</span>
-				<p>{e.content.substring(0, 120)}...</p>
-			  </EntryPreview>
-			))
-          )}
-		</Card>
-		
-		{/* Streak */}
-		<Card>
-		  <h3>Your Current Streak</h3>
-		  <StreakNumber>{streak} days</StreakNumber>
-		  <p>Showing up for yourself makes all the difference!</p>
-		</Card>
-		
-		{/* Positive Affirmations */}
-		<Card>
-		  <h3>Daily Affirmation</h3>
-		  <Affirmation>{affirmation}</Affirmation>
-		</Card>
-		
-	   </DashboardSection>
-	  </MainContainer>
+		<section className="dashboard">
+			{/* Today's Prompt */}
+			<div className="card">
+			  <h3>Today's Reflection Prompt</h3>
+			  <p>{prompt}</p>
+			  <button className="quick-add-button" onClick={handleQuickEntry}>
+				Write a New Entry
+			  </button>
+			</div>
+			
+			{/* Last Three Entries */}
+			<div className="card">
+			  <h3>Recent Entries</h3>
+			  {entries.length === 0 ? (
+				<p className="empty-state">No entries yet.</p>
+			  ) : (
+				entries.map((e, index) => (
+				  <Link key={index} to={`/entries#${e.id}`} className="entry-preview">
+					<span>{parseLocalDate(e.entryDate)}</span>
+					<p>{e.content.substring(0, 120)}...</p>
+				  </Link>
+				))
+			  )}
+			</div>
+			
+			{/* Streak */}
+			<div className="card">
+			  <h3>Your Current Streak</h3>
+			  <div className="streak-number">{streak} days</div>
+			  <p>Showing up for yourself makes all the difference!</p>
+			</div>
+			
+			{/* Positive Affirmations */}
+			<div className="card">
+			  <h3>Daily Affirmation</h3>
+			  <p className="affirmation">{affirmation}</p>
+			</div>
+	   </section>
+	  </div>
 	);
 };
 
 export default HomePage;
-
-/* --- Styled Components --- */
-
-const fadeIn = keyframes`
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-`;
-
-const MainContainer = styled.div`
-  width: 100%;
-  overflow-x: hidden;
-`;
-
-const HeroSection = styled.section`
-    position: relative;
-	height: 50vh;
-    display: flex;
-	justify-content: center;
-	align-items: center;
-	background: linear-gradient(135deg, #fdfbfb 0%, #ebf0f4 100%);
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.6), transparent 60%),
-              radial-gradient(circle at 75% 75%, rgba(170, 205, 230, 0.3), transparent 70%);
-`;
-
-const Content = styled.div`
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  animation: ${fadeIn} 1s ease both;
-  
-  h1 {
-	  font-size: clamp(2.5rem, 5vw, 3.5rem);
-	  font-weight: 700;
-	  color: #1e293b;
-  }
-  
-  p {
-	  font-size: 1.2rem;
-	  color: #475569;
-	  margin-bottom: 3rem;
-	  max-width: 700px;
-	  margin-inline: auto;
-  }
-  
-  @media (max-width: 768px)
-  {
-	  p {
-		font-size: 1.05rem;
-		margin-bottom: 2rem;
-	  }
-  }
-`;
-
-const DashboardSection = styled.section`
-  padding: 4rem 1.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  display: grid;
-  gap: 2.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-`;
-
-const Card = styled.div`
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-radius: var(--radius);
-  padding: 2rem;
-  box-shadow: var(--shadow-md);
-  
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  
-  &:hover {
-	  transform: translateY(-3px);
-	  box-shadow: var(--shadow-lg);
-  }
-  
-  h3 {
-	 margin-bottom: 0.8rem;
-	 color: #1e293b;
-	 font-weight: 600;
-  }
-  
-  p {
-	color: #475569;
-	line-height: 1.7;
-  }
-`;
-
-const BaseButton = styled.button`
-  display: inline-block;
-  font-weight: 600;
-  border-radius: var(--radius);
-  padding: 0.85rem 1.75rem;
-  box-shadow: 0 4px 12px rgba(0, 119, 182, 0.18);
-  
-  transition: transform 0.2s ease, background 0.2s ease;
-`;
-
-const QuickAddButton = styled(BaseButton)`
-  background: var(--color-primary);
-  color: white;
-  
-  &:hover {
-	  background: var(--color-primary-dark);
-	  transform: translateY(-2px);
-  }
-  
-`;
-
-const EntryPreview = styled(Link)`
-  display: block;
-  margin: 0.65rem 0;
-  padding: 0.8rem 1rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.55);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  text-decoration: none;
-  
-  transition: 0.2s ease;
-  
-  span {
-	  font-size: 0.85rem;
-	  color: #64748b;
-  }
-  
-  p {
-	  color: #334155;
-	  margin-top: 0.25rem;
-  }
-  
-  &:hover {
-	  background: rgba(255, 255, 255, 0.85);
-	  transform: translateY(-2px);
-  }
-`;
-
-const EmptyState = styled.p`
-  color: #94a3b8;
-  font-style: italic;
-`;
-
-const StreakNumber = styled.div`
-  font-size: 2.75rem;
-  font-weight: 700;
-  color: var(--color-primary);
-  margin: 0.5rem 0 0.75rem 0;
-`;
-
-const Affirmation = styled.p`
-  font-size: 1.25rem;
-  font-weight: 500;
-  font-style: italic;
-  opacity: 0.9;
-`;
-
-const StartButton = styled(Link)`
-  ${BaseButton}
-  background: var(--color-primary);
-  color: #fff;
-  font-size: 1.15rem;
-  text-decoration: none;
-  
-  &:hover {
-	  background: var(--color-primary-dark);
-	  transform: translateY(-2px);
-	  color: #fff;
-  }
-`;
-
-const InfoPanel = styled.section`
-  width: 100%;
-  background: linear-gradient(120deg, #ffffff, #f9fafc);
-  padding: 4rem 1.5rem;
-  display: flex;
-  justify-content: center;
-`;
-
-const PanelContent = styled.div`
-  max-width: 900px;
-  text-align: center;
-  
-  h2 {
-	  font-size: 2rem;
-	  color: #1e293b;
-	  margin-bottom: 1rem;
-	  font-weight: 600;
-  }
-  
-  p {
-	  color: #475569;
-	  font-size: 1.1rem;
-	  line-height: 1.75;
-	  max-width: 650px;
-	  margin: 0 auto;
-  }
-`;

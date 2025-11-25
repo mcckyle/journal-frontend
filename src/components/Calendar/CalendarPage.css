@@ -1,0 +1,84 @@
+/* Filename: CalendarPage.css */
+
+.calendar-page-wrapper {
+	width: 100%;
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	
+	background: linear-gradient(
+	  155deg,
+	  #f8fafc 0%,
+	  #fdfcf7 50%,
+	  #faf9ff 100%
+	);
+}
+
+.calendar-page-header {
+	padding: var(--space-lg) var(--space-xl) var(--space-md);
+	text-align: left;
+}
+
+.calendar-page-header h1 {
+	font-size: 2.6rem;
+	font-weight: 700;
+	color: var(--color-text);
+}
+
+.calendar-page-header p {
+	margin-top: 0.6rem;
+	font-size: 1.2rem;
+	color: #64748b;
+}
+
+.calendar-page-container {
+	flex: 1;
+	padding: 0 var(--space-xl);
+	display: flex;
+	justify-content: center;
+}
+
+.calendar-floating-button {
+	position: fixed;
+	bottom: var(--space-md);
+	right: var(--space-md);
+	background: var(--color-primary);
+	color: white;
+	border-radius: var(--radius);
+	padding: 0.9rem 1.6rem;
+	font-size: 1rem;
+	box-shadow: var(--shadow-md);
+	
+	transition: var(--transition);
+}
+
+.calendar-floating-button:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 768px) {
+	.calendar-page-header {
+		padding: var(--space-md);
+	}
+	
+	.calendar-page-header h1 {
+		font-size: 2rem;
+	}
+	
+	.calendar-page-header p {
+		font-size: 1rem;
+	}
+	
+	.calendar-page-container {
+		padding: 0 var(--space-md);
+	}
+	
+	.calendar-floating-button {
+		bottom: 1.25rem;
+		right: 1.25rem;
+		padding: 0.7rem 1.15rem;
+		font-size: 0.95rem;
+	}
+}
+	

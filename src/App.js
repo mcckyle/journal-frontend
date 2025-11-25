@@ -10,51 +10,28 @@ import Register from './components/Register/Register.jsx';
 import Profile from './components/Profile/Profile.jsx';
 import EntriesTimeline from './components/EntriesTimeline/EntriesTimeline.jsx';
 import Settings from './components/Settings/Settings.jsx';
-import GlobalStyles from './styles/GlobalStyles';
+import useAuth from "./hooks/useAuth";
 
 import './App.css';
 
-//Check Token Validity.
-const isAuthenticated = async () => {
-  const token = localStorage.getItem('token');
-  
-  if (!token)
-  {
-	  return false;
-  }
-  
-  try {
-	  const response = await fetch('http://localhost:8080/api/auth/validate', {
-		  headers: { Authorization: `Bearer ${token}` },
-	  });
-	  
-	  if (!response.ok)
-	  {
-		  return false;
-	  }
-	  
-	  const data = await response.json();
-	  return data.valid === true;
-  }
-  catch (error)
-  {
-	  console.error('Token validation failed: ', error);
-	  return false;
-  }
-};
+//Reusable Wrapper for Consistent Page Spacing.
+const PageContainer = ({ children }) => (
+  <div className="page-container">
+    {children}
+  </div>
+);
 
 // PrivateRoute Component
 const PrivateRoute = ({ element }) => {
-	const [authorized, setAuthorized] = useState(null);
-	
-	useEffect(() => {
-		(async () => setAuthorized(await isAuthenticated()))();
-		}, []);
+	const authorized = useAuth();
 	
 	if (authorized === null)
 	{
 		return (
-		  <div className="loading-screen">Checking session...</div>
+		  <div className="loading-screen">
+		    <div className="loading-spinner"></div>
+		      <p>Checking session...</p>
+		  </div>
 		);
 	}
 	
@@ -63,10 +40,8 @@ const PrivateRoute = ({ element }) => {
 
 const App = () => (
   <Router>
-    <GlobalStyles />
-	<div className="app-container">
-		<Header />
-		<main className="main-content">
+	<Header />
+		<PageContainer>
 			<Routes>
 			  <Route path="/" element={<HomePage />} />
 			  <Route path="/calendar" element={<PrivateRoute element={<CalendarPage />} />} /> {/* Calendar Page Route */}
@@ -75,10 +50,9 @@ const App = () => (
 			  <Route path="/login" element={<Login />} />
 			  <Route path="/register" element={<Register />} />
 			  <Route path="/settings" element={<Settings />} />
-			  <Route path="*" element={<h2>404 - Page Not Found</h2>} /> {/* Handle undefined routes */}
+			  <Route path="*" element={<h2 className="not-found">Page Not Found</h2>} /> {/* Handle undefined routes */}
 			</Routes>
-		</main>
-	</div>
+		</PageContainer>
   </Router>
 );
 

@@ -61,9 +61,12 @@ src/
   │   ├── Calendar.js       # Calendar component for viewing entries
   │   ├── Login.jsx         # Login form
   │   ├── Register.jsx      # Registration form
+  │   ├── EntriesTimeline.jsx
+  │	  ├── EntryModal.jsx
+  │	  ├── Settings.jsx
   │   └── Profile.jsx       # User profile page
   ├── styles/
-  │   └── GlobalStyles.js   # Global styling setup
+  │   └── global.css   # Global styling setup
   ├── App.js                # Main app component
   └── index.js              # App entry point
 ```

@@ -42,8 +42,8 @@ const EntryModal = ({
 
 			setSaveStatus("Saved ✓");
 			
-			//Clear the status after two seconds have passed.
-			setTimeout(() => setSaveStatus(""), 2000);
+			//Clear the status after a short time.
+			setTimeout(() => setSaveStatus(""), 1800);
 		}, 2000);
 		
 		return () => clearTimeout(autosaveTimer.current);
@@ -103,7 +103,7 @@ const EntryModal = ({
 		<button className="entry-modal-close" onClick={onClose}>
 		  ✕
 		</button>
-    </div>
+      </div>
    </div>
    );
 };

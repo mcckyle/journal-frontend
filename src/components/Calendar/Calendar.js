@@ -3,8 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isSameDay } from 'date-fns';
 import EntryModal from "../EntryModal/EntryModal.jsx";
-import styled from "styled-components";
-//import './Calendar.css';
+import "./Calendar.css";
 
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -288,31 +287,38 @@ const Calendar = () => {
 	  setToastVisible(true);
 	  setTimeout(() => setToastVisible(false), 2000); //Auto-hide after 2 seconds.
   };
-
+  
   return (
-    <Container>
-      <HeaderRow>
-        <NavButton onClick={() => handleMonthChange(-1)}>&lt;</NavButton>
-        <MonthLabel>{format(selectedDate, 'MMMM yyyy')}</MonthLabel>
-        <NavButton onClick={() => handleMonthChange(1)}>&gt;</NavButton>
-      </HeaderRow>
+    <div className="calendar-container">
+      <div className="calendar-header">
+        <div className="calendar-nav-button" onClick={() => handleMonthChange(-1)}>&lt;</div>
+        <h2>{format(selectedDate, 'MMMM yyyy')}</h2>
+        <div className="calendar-nav-button" onClick={() => handleMonthChange(1)}>&gt;</div>
+      </div>
 
-	  <Grid>
+	  <div className="calendar-grid">
 	    {daysInMonth.map((day) => {
-		const dateKey = format(day, 'yyyy-MM-dd');
-		const hasEntry = gratitudeEntries[dateKey];
+		  const dateKey = format(day, "yyyy-MM-dd");
+		  const hasEntry = ! ! gratitudeEntries[dateKey];
+		
+		  const classes = [
+			"calendar-day",
+			isToday(day) ? "today" : "",
+			isSameDay(day, selectedDate) ? "selected" : "",
+			hasEntry ? "has-entry" : ""
+		  ].join(" ");
+		  
 		return (
-		  <DayCell
-		    key={day}
-			isToday={isToday(day)}
-			isSelected={isSameDay(day, selectedDate)}
+		  <div 
+		    key={dateKey}
+			className={classes}
 		    onClick={() => handleDayClick(day)}
 		>
-		  {format(day, 'd')}
-		</DayCell>
+		  {format(day, "d")}
+		</div>
 	  );
 	 })}
-	</Grid>
+	</div>
 
 	<EntryModal
 	  isOpen={modalOpen}
@@ -327,121 +333,9 @@ const Calendar = () => {
 	  isEditing={ ! ! currentEntryId}
 	  entryDateLabel={format(selectedDate, "MMMM dd, yyyy")}
 	  />
-    {toastVisible && <Toast> {toastMessage}</Toast>}
-  </Container>
+    {toastVisible && <div className="toast"> {toastMessage}</div>}
+  </div>
   );
 };
 
 export default Calendar;
-
-// Styled Components.
-
-//Container Styling.
-const Container = styled.div`
-  width: 100%;
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: var(--space-lg);
-  box-shadow: var(--shadow-sm);
-  
-  transition: var(--transition);
-`;
-
-//Header Row Styling.
-const HeaderRow = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-md);
-`;
-
-const MonthLabel = styled.h2`
-  margin: 0;
-  font-size: 1.6rem;
-  font-weight: 600;
-  color: var(--color-text);
-`;
-
-const NavButton = styled.button`
-  background: var(--color-primary);
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  font-size: 1.2rem;
-  
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-md);
-  
-  transition: var(--transition);
-  
-  &:hover {
-	  background: var(--color-primary-dark);
-	  transform: translateY(-2px);
-  }
-`;
-
-//Calendar Grid Styles.
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 12px;
-`;
-
-//Individual Day Cell Styles.
-const DayCell = styled.div`
-  padding: 16px 0;
-  border-radius: var(--radius);
-  font-weight: 500;
-  text-align: center;
-  cursor: pointer;
-  user-select: none;
-  
-  transition: var(--transition);
-  
-  background: ${({ isSelected, isToday, hasEntry }) =>
-    isSelected
-	  ? "var(--color-primary)"
-	  : hasEntry
-	  ? "#eefbf1"
-	  : isToday
-	  ? "#eef6ff"
-      : "#f7f9fc"};
-	  
-  color: ${({ isSelected }) =>
-    isSelected ? "white" : "var(--color-text)"};
-	
-  box-shadow: ${({ isSelected, hasEntry }) =>
-    isSelected
-	  ? "var(--shadow-md)"
-	  : hasEntry
-	  ? "inset 0 0 0 1px var(--color-accent)"
-      : "inset 0 0 0 1px #e8e8e8"};
-	  
-  &:hover {
-	  transform: translateY(-2px);
-	  background: ${({ isSelected }) =>
-	  isSelected ? "var(--color-primary-dark)" : "white"};
-	  box-shadow: ${({ isSelected }) =>
-	    isSelected
-		  ? "var(--shadow-lg)"
-	      : "inset 0 0 0 1px var(--color-primary)"};  
-`;
-
-//Toast Styles.
-const Toast = styled.div`
-  position: fixed;
-  bottom: var(--space-lg);
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 14px 28px;
-  border-radius: var(--radius);
-  background: rgba(30, 41, 59, 0.9);
-  color: white;
-  font-size: 1rem;
-  z-index: 999;
-  
-  animation: fadeInOut 2.4s ease both;
-`;

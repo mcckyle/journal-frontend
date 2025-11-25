@@ -12,6 +12,8 @@ const Profile = () => {
 	const [openEdit, setOpenEdit] = useState(false);
 	const [editData, setEditData] = useState({ username: "", email: "", bio: "" });
 	const [saving, setSaving] = useState(false);
+	const [exporting, setExporting] = useState(false);
+	const [importing, setImporting] = useState(false);
 	
 	const handleLogout = () => {
       localStorage.removeItem("token");  // Clear the authentication token.
@@ -103,6 +105,127 @@ const Profile = () => {
 		fetchUser();
 	}, []);
 	
+	//Helper: Fetch All User Entries.
+	const fetchAllEntries = async () => {
+		const token = localStorage.getItem("token");
+		const response = await fetch(`http://localhost:8080/api/calendar/user/${user.id}`, {
+			headers: { Authorization: `Bearer ${token}` }
+		});
+		return response.ok ? await response.json() : [];
+	};
+	
+	//Export Entries to JSON.
+	const handleExportJSON = async () => {
+		setExporting(true);
+		const entries = await fetchAllEntries();
+		const blob = new Blob([JSON.stringify(entries, null, 2)], {
+			type: "application/json",
+		});
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "gratitude-entries.json";
+		a.click();
+		URL.revokeObjectURL(url);
+		setExporting(false);
+	};
+	
+	//Export Entries to Markdown.
+	const handleExportMarkdown = async () => {
+		setExporting(true);
+		const entries = await fetchAllEntries();
+		
+		const md = entries
+		  .map(e => `## ${e.entryDate}\n**${e.title}**\n\n${e.content}\n`)
+		  .join("\n---\n\n");
+		
+		const blob = new Blob([md], { type: "text/markdown" });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement("a");
+		a.href = url;
+		a.download = "gratitude-entries.md";
+		a.click();
+		URL.revokeObjectURL(url);
+		setExporting(false);
+	};
+	
+	//Export Entries to PDF.
+	const handleExportPDF = async () => {
+		setExporting(true);
+		const entries = await fetchAllEntries();
+		const { jsPDF } = await import("jspdf");
+		
+		const doc = new jsPDF();
+		let y = 10;
+		
+		entries.forEach(entry => {
+			doc.setFontSize(14);
+			doc.text(entry.entryDate, 10, y);
+			y += 6;
+			doc.setFontSize(12);
+			doc.text(entry.title, 10, y);
+			y += 6;
+			doc.setFontSize(10);
+			doc.text(doc.splitTextToSize(entry.content, 180), 10, y);
+			y += 12;
+			if (y > 270)
+			{
+				doc.addPage();
+				y = 10;
+			}
+		});
+		
+		doc.save("gratitude-entries.pdf");
+		setExporting(false);
+	};
+	
+	//Import Entries From JSON File.
+	const handleImportJSON = async (event) => {
+		const file = event.target.files[0];
+		if ( ! file)
+		{
+			return;
+		}
+		
+		setImporting(true);
+		
+		const text = await file.text();
+		let imported;
+		try
+		{
+			imported = JSON.parse(text);
+		}
+		catch
+		{
+			alert("Invalid JSON file!");
+			setImporting(false);
+			return;
+		}
+		
+		const token = localStorage.getItem("token");
+		
+		for (const entry of imported)
+		{
+			await fetch("http://localhost:8080/api/calendar", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Authorization: `Bearer ${token}`,
+				},
+				body: JSON.stringify({
+					entryDate: entry.entryDate,
+					title: entry.title,
+					content: entry.content,
+					userId: user.id
+				}),
+			});
+		}
+		
+		alert("Entries imported successfully!");
+		setImporting(false);
+		window.location.reload();
+	};
+	
 	if (loading)
 	{
 		return (
@@ -155,6 +278,27 @@ const Profile = () => {
 		  <Button variant="outlined" onClick={handleOpenEdit}>
 			Edit Profile
 		  </Button>
+		  <Button variant="outlined" onClick={handleExportJSON} disabled={exporting}>
+			Export JSON
+		  </Button>
+		  <Button variant="outlined" onClick={handleExportMarkdown} disabled={exporting}>
+			Export Markdown
+		  </Button>
+		  <Button variant="outlined" onClick={handleExportPDF} disabled={exporting}>
+			Export PDF
+		  </Button>
+		  
+		  <label className="import-label">
+		    <input
+			  type="file"
+			  accept="application/json"
+			  onChange={handleImportJSON}
+			  style={{ display: "none" }}
+		  />
+		    <Button variant="contained" disabled={importing}>
+			  Import JSON
+		    </Button>
+		  </label>
 		  <Button variant="contained" color="error" onClick={handleLogout}>
 			Logout
 		  </Button>
