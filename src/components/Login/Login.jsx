@@ -1,45 +1,30 @@
 //Filename: Login.jsx
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Container, Typography, Box, Alert, Paper, Divider } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
+import { loginUser } from '../../services/AuthService';
+import { AuthContext } from '../../context/AuthContext';
 import './Login.css';
 
 const Login = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const { login } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState("");
   
   const onSubmit = async (data) => {
-	  try {
-		  const response = await fetch('http://localhost:8080/api/auth/signin', {
-			  method: 'POST',
-			  headers: { 'Content-Type': 'application/json' },
-			  body: JSON.stringify(data),
-		  });
-		  
-		  if ( ! response.ok)
-		  {
-			  throw new Error('Invalid username or password!');
-		  }
-		  
-		  const result = await response.json();
-		  const { token } = result;
-		  
-		  if (token)
-		  {
-			  localStorage.setItem('token', token);
-			  navigate('/profile');
-		  }
-		  else
-		  {
-			  throw new Error('Token missing in response.');
-		  }
+	  setErrorMessage("");
+	  try
+	  {
+		  await login(data);
+		  navigate("/profile");
 	  }
 	  catch (error)
 	  {
-		  setErrorMessage(error.message);
+		  console.error("Login error: ", error);
+		  setErrorMessage(error.message || "Login failed.");
 	  }
   };
 
@@ -80,7 +65,7 @@ const Login = () => {
 			className="auth-button"
 		  >
 		    Login
-		</Button>
+		  </Button>
         </form>
 		
 		<Divider sx={{ my: 3 }} />

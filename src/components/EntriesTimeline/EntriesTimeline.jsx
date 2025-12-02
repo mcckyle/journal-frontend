@@ -1,16 +1,15 @@
 //Filename: EntriesTimeline.jsx
 
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { format } from "date-fns";
 import { parseLocalDate } from "../../utils/parseLocalDate";
 import EntryModal from "../EntryModal/EntryModal.jsx";
+import { AuthContext } from "../../context/AuthContext";
 import "./EntriesTimeline.css";
 
 const EntriesTimeline = () => {
+	const { user, accessToken } = useContext(AuthContext);
 	const [entries, setEntries] = useState([]);
-	const [token] = useState(localStorage.getItem("token"));
-	const [userId, setUserId] = useState(null);
-	
 	const [search, setSearch] = useState("");
 	const [startDate, setStartDate] = useState("");
 	const [endDate, setEndDate] = useState("");
@@ -18,26 +17,19 @@ const EntriesTimeline = () => {
 	const [editingEntry, setEditingEntry] = useState(null);
 	const [modalOpen, setModalOpen] = useState(false);
 	
-	//Load userId from JWT.
-	useEffect(() => {
-		try {
-			const decoded = JSON.parse(atob(token.split(".")[1]));
-			setUserId(decoded.userId ?? decoded.sub);
-		}
-		catch (e) {
-			console.error("Token decode error:", e);
-		}
-	}, [token]);
-	
-  //Fetch all entries for the user.
+  //Fetch all entries for the current user.
   useEffect(() => {
-    if (userId) {
-      const fetchEntries = async () => {
+	if ( ! user)
+	{
+		return;
+	}
+    
+	const fetchEntries = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/calendar/user/${userId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
+          const response = await fetch(`http://localhost:8080/api/calendar`, {
+			method: "GET",
+            credentials: "include", //send HttpOnly cookie.
+			headers: { Authorization: `Bearer ${accessToken}`, },
           });
 
           if ( ( ! response.ok) && (response.status !== 204) )
@@ -46,7 +38,15 @@ const EntriesTimeline = () => {
 		  }
 
           const data = response.status === 204 ? [] : await response.json();
-		  setEntries(data);
+		  
+		  const formattedEntries = data.map(entry => ({
+				  id: entry.id,
+				  entryDate: entry.entryDate,
+				  title: entry.title,
+				  content: entry.content,
+		  }));
+		  
+		  setEntries(formattedEntries);
         }
 		catch (error)
 		{
@@ -55,10 +55,9 @@ const EntriesTimeline = () => {
       };
 
       fetchEntries();
-    }
-  }, [userId, token]);
+  }, [user]);
   
-    //Update entry.
+  //Update entry.
   const handleSaveFromTimeline = async () => {
 	if ( ( ! editingEntry?.title.trim()) || ( ! editingEntry?.content.trim()))
 	{
@@ -71,17 +70,16 @@ const EntriesTimeline = () => {
 			entryDate: editingEntry.entryDate,
 			title: editingEntry.title,
 			content: editingEntry.content,
-			userId,
+			userId: user.id,
 		};
 
-      const response = await fetch(
-	    `http://localhost:8080/api/calendar/${editingEntry.id}`,
-		{
+      const response = await fetch(`http://localhost:8080/api/calendar/${editingEntry.id}`, {
 			method: "PUT",
 			headers: {
-			  "Content-Type": "application/json",
-			   Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			    Authorization: `Bearer ${accessToken}`,
 			},
+			credentials: "include",
 			body: JSON.stringify(updatedData),
 		}
       );
@@ -114,16 +112,15 @@ const EntriesTimeline = () => {
 			entryDate: editingEntry.entryDate,
 			title: editingEntry.title,
 			content: editingEntry.content,
-			userId,
+			userId: user.id,
 		};
 
-      const response = await fetch(
-	    `http://localhost:8080/api/calendar/${editingEntry.id}`,
-		{
+      const response = await fetch(`http://localhost:8080/api/calendar/${editingEntry.id}`, {
 			method: "PUT",
+			credentials: "include",
 			headers: {
-			  "Content-Type": "application/json",
-			   Authorization: `Bearer ${token}`,
+				"Content-Type": "application/json",
+			    Authorization: `Bearer ${accessToken}`,
 			},
 			body: JSON.stringify(updatedData),
 		}
@@ -160,7 +157,8 @@ const EntriesTimeline = () => {
 	  try {
 		  const response = await fetch(`http://localhost:8080/api/calendar/${editingEntry.id}`, {
 			  method: "DELETE",
-			  headers: { Authorization: `Bearer ${token}` },
+			  credentials: "include",
+			  headers: { Authorization: `Bearer ${accessToken}` },
 		  });
 		  
 		  if (response.status === 204)

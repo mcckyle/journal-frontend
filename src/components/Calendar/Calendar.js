@@ -1,16 +1,16 @@
 //Filename: Calendar.js
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { format, addMonths, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isSameDay } from 'date-fns';
 import EntryModal from "../EntryModal/EntryModal.jsx";
+import { AuthContext } from "../../context/AuthContext";
 import "./Calendar.css";
 
 const Calendar = () => {
+  const { user, accessToken } = useContext(AuthContext); // Get user from context.
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [gratitudeEntries, setGratitudeEntries] = useState({});
   const [modalOpen, setModalOpen] = useState(false);
-  const [userId, setUserId] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
   const [toastVisible, setToastVisible] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   
@@ -18,38 +18,19 @@ const Calendar = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [currentEntryId, setCurrentEntryId] = useState(null);
-
-  //Decode token to get the user ID.
+  
+  //Fetch all entries for the current user.
   useEffect(() => {
-    const fetchUserId = () => {
-      const storedToken = localStorage.getItem('token');
-      if (storedToken)
-	  {
-        try
-		{
-          const decodedToken = JSON.parse(atob(storedToken.split('.')[1]));
-		  const idFromToken = decodedToken.userId ?? decodedToken.sub; //Fallback if using 'sub'.
-          setUserId(idFromToken);
-          console.log("Decoded userId:", idFromToken);
-        }
-		catch (e)
-		{
-          console.error('Error decoding token:', e);
-        }
-      }
-    };
-    fetchUserId();
-  }, []);
-
-  //Fetch all entries for the user.
-  useEffect(() => {
-    if (userId) {
-      const fetchEntries = async () => {
+	if ( ! user)
+	{
+		return;
+	}
+    
+	const fetchEntries = async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/calendar/user/${userId}`, {
-            headers: {
-              'Authorization': `Bearer ${token}`,
-            },
+          const response = await fetch(`http://localhost:8080/api/calendar`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+            credentials: "include", //optional, but harmless if refresh is needed.
           });
 
           if ( ( ! response.ok) && (response.status !== 204) )
@@ -77,8 +58,7 @@ const Calendar = () => {
       };
 
       fetchEntries();
-    }
-  }, [userId, token]);
+  }, [user]);
 
   // Save or update entry.
   const handleSaveEntry = async () => {
@@ -92,44 +72,44 @@ const Calendar = () => {
 		entryDate: selectedDate.toISOString().split('T')[0], //"yyyy-MM-dd".
 		title,
 		content,
-		userId
+		userId: user.id, //Still send the userId to the backend.
 	};
-
-	const existingEntryId = currentEntryId;
-
-    try {
-	  const method = existingEntryId ? 'PUT' : 'POST';
-	  const url = existingEntryId
-	    ? `http://localhost:8080/api/calendar/${existingEntryId}`
+	
+	try {
+	  const method = currentEntryId ? 'PUT' : 'POST';
+	  const url = currentEntryId
+	    ? `http://localhost:8080/api/calendar/${currentEntryId}`
 		: `http://localhost:8080/api/calendar`;
 
       const response = await fetch(url, {
         method,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
+			"Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`
+		},
+		credentials: "include",
         body: JSON.stringify(entryData),
       });
 
-      if (!response.ok) throw new Error(`${method} failed!`);
+      if ( ! response.ok)
+	  {
+		  throw new Error(`${method} failed!`);
+	  }
 	  
-	  const updatedEntry = await response.json();
-
-      // Use updatedEntry.entryDate for local state key.
-	  const key = updatedEntry.entryDate;
+	  const saved = await response.json();
+	  const key = saved.entryDate;
       setGratitudeEntries(prev => ({
         ...prev,
         [key]: { 
-		  id: updatedEntry.id,
-		  title: updatedEntry.title,
-		  content: updatedEntry.content,
+		  id: saved.id,
+		  title: saved.title,
+		  content: saved.content,
 		},
       }));
 	  
-	  setCurrentEntryId(updatedEntry.id); //Update currentEntryId for future edits.
+	  setCurrentEntryId(saved.id); //Update currentEntryId for future edits.
 	  setModalOpen(false);
-	  showToast(existingEntryId ? "Entry updated!" : "Entry saved!");
+	  showToast(currentEntryId ? "Entry updated!" : "Entry saved!");
     }
 	catch (error)
 	{
@@ -149,41 +129,33 @@ const Calendar = () => {
 	  entryDate: selectedDate.toISOString().split('T')[0], //"yyyy-MM-dd".
 	  title,
 	  content,
-	  userId
+	  userId: user.id,
     };
 
 	try
 	{
-		let url, method;
-		
-		if (currentEntryId)
-		{
-			//Existing entry -> autosave update.
-			method = "PUT";
-			url = `http://localhost:8080/api/calendar/${currentEntryId}`;
-		}
-		else
-		{
-			//New entry -> autosave should create the new entry.
-			method = "POST";
-			url = `http://localhost:8080/api/calendar`;
-		}
+		const method = currentEntryId ? 'PUT' : 'POST';
+	    const url = currentEntryId
+	      ? `http://localhost:8080/api/calendar/${currentEntryId}`
+		  : `http://localhost:8080/api/calendar`;
 
       const response = await fetch(url,
 		{
 			method,
 			headers: {
 			  "Content-Type": "application/json",
-			   Authorization: `Bearer ${token}`,
-			},
+              Authorization: `Bearer ${accessToken}`
+		    },
+			credentials: "include",
 			body: JSON.stringify(entryData),
 		});
 
-      if ( ! response.ok) throw new Error("Autosave failed!");
+      if ( ! response.ok)
+	  {
+		  throw new Error("Autosave failed!");
+	  }
 	  
 	  const saved = await response.json();
-
-      // Update local state.
 	  const key = saved.entryDate;
 	  setGratitudeEntries((prev) => ({
 		  ...prev,
@@ -222,7 +194,10 @@ const Calendar = () => {
 	  try {
 		  const response = await fetch(`http://localhost:8080/api/calendar/${currentEntryId}`, {
 			  method: 'DELETE',
-			  headers: { Authorization: `Bearer ${token}` },
+			  headers: {
+                Authorization: `Bearer ${accessToken}`
+		      },
+			  credentials: "include",
 		  });
 		  
 		  if (response.status === 204)

@@ -1,42 +1,31 @@
 //Filename: Register.jsx
 
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { TextField, Button, Container, Typography, Box, Alert, Paper, Divider } from '@mui/material';
+import { TextField, Button, Container, Typography, Alert, Paper, Divider } from '@mui/material';
 import { useNavigate, Link } from 'react-router-dom';
+import { registerUser } from '../../services/AuthService';
+import { AuthContext } from '../../context/AuthContext';
 import './Register.css';
 
 const Register = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const { setAccessToken } = useContext(AuthContext);
   const [errorMessage, setErrorMessage] = React.useState('');
 
   const onSubmit = async (data) => {
     try
 	{
-      const response = await fetch('http://localhost:8080/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-
-	  if ( ! response.ok)
-	  {
-		  throw new Error('Invalid username or password!');
-	  }
+      const response = await registerUser(data);
 	  
-	  const result = await response.json();
-	  const { token } = result;
+	  //Expected: { accessToken, username, email }
+	  const { accessToken } = response;
 	  
-	  if (token)
-	  {
-		  localStorage.setItem('token', token);
-		  navigate('/profile');
-	  }
-	  else
-	  {
-		  throw new Error('Token missing in response.');
-	  }
+	  //Save the access token for session auth.
+	  setAccessToken(accessToken);
+	  
+	  navigate('/profile');
     }
 	catch (error)
 	{
@@ -92,7 +81,7 @@ const Register = () => {
 		  </Button>
         </form>
 		
-		<Divider sx={{ my: 3}} />
+		<Divider sx={{ my: 3 }} />
 		
 		<Typography variant="body2" color="textSecondary">
 		  Already have an account?{' '}

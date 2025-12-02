@@ -1,6 +1,6 @@
 /* Filename: App.css */
 
-/* Shared Content Wrapper Styles. */
+/* Page Wrapper Styles. */
 .page-container {
 	flex: 1;
 	width: 100%;
@@ -11,7 +11,7 @@
 	animation: fadeInPage 0.35s ease both;
 }
 
-/* Modern Loading State Styles. */
+/* Loading State Styles. */
 .loading-screen {
 	display: flex;
 	flex-direction: column;
@@ -27,30 +27,31 @@
 	width: 32px;
 	height: 32px;
 	border-radius: 50%;
-	border: 3px solid rgba(0, 0, 0, 0.1);
+	border: 3px solid rgba(0, 0, 0, 0.12);
 	border-top-color: var(--color-primary);
 	
-	animation: spin 0.65s linear infinite;
+	animation: spin 0.7s linear infinite;
 }
 
 /* 404 Styles. */
 .not-found {
 	text-align: center;
-	opacity: 0.7;
 	margin-top: var(--space-xl);
+	opacity: 0.7;
 	font-weight: 500;
 }
 
 /* Fade-in Page Animation Styles. */
 @keyframes fadeInPage {
-	from { opacity: 0; transform: translateY(10px); }
-	to { opacity: 1; transform: translateY(0); }
+	from { opacity: 0; transform: translateY(12px); }
+	to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes spin (
   to { transform: rotate(360deg); }
 }
 
+/* Media Query Styles. */
 @media (max-width: 768px)
 {
 	.page-container { padding: var(--space-md); }

@@ -2,7 +2,7 @@
 
 /* Page Layout Styles. */
 .settings-page {
-	max-width: 780px;
+	max-width: 760px;
 	margin: 0 auto;
 	padding: 48px 24px;
 	
@@ -11,49 +11,48 @@
 
 /* Title Styles. */
 .settings-title {
-	font-size: 2.3rem;
-	font-weight: 700;
-	color: var(--color-text);
 	text-align: center;
+	font-size: 2.2rem;
+	font-weight: 700;
 	margin-bottom: 40px;
+	color: var(--color-text);
 }
 
 /* Section Styles. */
 .settings-section {
-	margin-bottom: 44px;
+	margin-bottom: 48px;
 }
 
 .settings-section-title {
-	font-size: 1.35rem;
+	font-size: 1.32rem;
 	font-weight: 600;
-	color: var(--color-text);
 	margin-bottom: 18px;
+	color: var(--color-text);
 }
 
 /* Settings Cards Styles. */
 .settings-card {
-	background: rgba(255, 255, 255, 0.58);
-	backdrop-filter: blur(16px);
+	background: rgba(255, 255, 255, 0.75);
+	backdrop-filter: blur(14px);
 	padding: 28px;
-	border-radius: 22px;
-	box-shadow: 0 8px 26px rgba(0, 0, 0, 0.08);
-	margin-bottom: 22px;
+	border-radius: 20px;
+	box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+	margin-bottom: 20px;
 }
 
 /* Card Header Styles. */
 .settings-card-header {
-	margin-bottom: 18px;
+	margin-bottom: 16px;
 }
 
 .settings-card-title {
-	font-size: 1.18rem;
+	font-size: 1.15rem;
 	font-weight: 600;
-	margin-bottom: 4px;
 }
 
 .settings-card-subtitle {
-	font-size: 0.97rem;
-	opacity: 0.75;
+	font-size: 0.95rem;
+	opacity: 0.7;
 }
 
 /* Options Group Styles */
@@ -69,15 +68,15 @@
 	gap: 10px;
 	font-size: 1rem;
 	cursor: pointer;
-	padding: 4px 0;
+	padding: 3px 0;
 }
 
-/* Account Section Buttons Styles. */
+/* Account Buttons Styles. */
 .settings-actions {
 	display: flex;
 	flex-direction: column;
 	gap: 12px;
-	padding-top: 6px;
+	padding-top: 8px;
 }
 
 .settings-action-btn {
@@ -86,24 +85,21 @@
 	border: none;
 	font-size: 1rem;
 	font-weight: 600;
-	background: var(--color-primary);
 	color: white;
+	background: var(--color-primary);
 	cursor: pointer;
 	
-	transition: opacity 0.22s ease;
+	transition: transform 0.15s ease, opacity 0.2s ease;
 }
 
 .settings-action-btn:hover {
-	opacity: 0.88;
+	opacity: 0.9;
+	transform: translateY(-1px);
 }
 
 /* Danger Button Styles. */
 .settings-action-btn.danger {
-	background: #e45858;
-}
-
-.settings-action-btn.danger:hover {
-	opacity: 0.88;
+	background: #e45757;
 }
 
 /* Modal Input Styles. */
@@ -126,6 +122,6 @@
 /* Media Query Styles. */
 @media (max-width: 600px)
 {
-	.settings-page { padding: 28px 18px; }
+	.settings-page { padding: 32px 18px; }
 	.settings-title { font-size: 1.9rem; }
 }

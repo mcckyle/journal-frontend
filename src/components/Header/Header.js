@@ -1,49 +1,43 @@
 // Filename: src/components/Header.js
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from '../../context/AuthContext';
 import "./Header.css";  // Import the CSS file here.
 
 const Header = () => {
-  const [user, setUser] = useState(null);
+  const { accessToken, user, logout } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
+  const avatarRef = useRef(null);
   const navigate = useNavigate();
   
-  //Fetch the user info if a token exists.
+  const handleLogout = async () => {
+	  await logout(); //Call global logout logic.
+	  navigate("/login"); //Redirect AFTER logout state is fully cleared.
+  };
+  
+  //Click-outside listener.
   useEffect(() => {
-	  const token = localStorage.getItem("token");
-	  if ( ! token)
-	  {
-		  return;
-	  }
-	  
-	  const loadUser = async () => {
-		  try
+	  const handleClickOutside = (event) => {
+		  if ( (avatarRef.current) && ( ! avatarRef.current.contains(event.target)) )
 		  {
-			  const response = await fetch("http://localhost:8080/api/auth/me", {
-				  headers: { Authorization: `Bearer ${token}` },
-			  });
-			  
-			  if (response.ok)
-			  {
-				  const data = await response.json();
-				  setUser(data);
-			  }
+			  setMenuOpen(false);
 		  }
-		  catch (error)
-	      {
-		      console.error("Error fetching user:", error);
-	      }
 	  };
 	  
-	  loadUser();
-  }, []);
-  
-  const handleLogout = () => {
-	  localStorage.removeItem("token");
-	  setUser(null);
-	  navigate("/login");
-  };
+	  if (menuOpen)
+	  {
+		  document.addEventListener("mousedown", handleClickOutside);
+	  }
+	  else
+	  {
+		  document.removeEventListener("mousedown", handleClickOutside);
+	  }
+	  
+	  return () => {
+		  document.removeEventListener("mousedown", handleClickOutside);
+	  };
+  }, [menuOpen]);
   
   const toggleMenu = () => setMenuOpen((prev) => !prev);
   const closeMenu = () => setMenuOpen(false);
@@ -68,20 +62,44 @@ const Header = () => {
 		{/* Auth / User Avatar */}
 		<div className="auth-section">
 		  {user ? (
-		    <div className="avatar-wrapper" onClick={toggleMenu}>
+		    <div className="avatar-wrapper" ref={avatarRef} onClick={toggleMenu}>
 			  <div className="avatar-circle">
-			    {user.username.charAt(0).toUpperCase()}
+			    {user.username && user.username.length > 0
+				? user.username.charAt(0).toUpperCase()
+				: "?"}
 			  </div>
 			  
 			  <div className={`avatar-menu ${menuOpen ? "open" : ""}`}>
-			    <Link to="/entries" className="avatar-menu-item" onClick={closeMenu}>My Timeline</Link>
-			    <Link to="/profile" className="avatar-menu-item" onClick={closeMenu}>Profile</Link>
+			    <Link
+				  to="/entries"
+				  className="avatar-menu-item"
+				  onClick={(e) => { e.stopPropagation(); closeMenu(); }}
+				>
+				  My Timeline
+				</Link>
+				
+				<Link
+				  to="/profile"
+				  className="avatar-menu-item"
+				  onClick={(e) => { e.stopPropagation(); closeMenu(); }}
+				>
+				  Profile
+				</Link>
 				
 				<div className="avatar-menu-divider" />
 				
-				<Link to="/settings" className="avatar-menu-item" onClick={closeMenu}>Settings</Link>
+				<Link
+				  to="/settings"
+				  className="avatar-menu-item"
+				  onClick={(e) => { e.stopPropagation(); closeMenu(); }}
+				>
+				  Settings
+				</Link>
 				
-				<button className="avatar-menu-item logout" onClick={() => { closeMenu(); handleLogout(); }}>
+				<button
+				  className="avatar-menu-item logout"
+				  onClick={(e) => { e.stopPropagation(); closeMenu(); handleLogout(); }}
+				>
 				  Logout
 				</button>
 			  </div>

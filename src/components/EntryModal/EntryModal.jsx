@@ -60,6 +60,10 @@ const EntryModal = ({
 		  className="entry-modal-container"
 		  onClick={(e) => e.stopPropagation()}
 		>
+		  <button className="entry-modal-close" onClick={onClose}>
+		    ✕
+		  </button>
+		  
 		  <h3 className="entry-modal-header">
 		    {entryDateLabel
 			  ? `Entry for ${entryDateLabel}`
@@ -99,11 +103,7 @@ const EntryModal = ({
 		      </button>
 		    )}
 	    </div>
-
-		<button className="entry-modal-close" onClick={onClose}>
-		  ✕
-		</button>
-      </div>
+	  </div>
    </div>
    );
 };

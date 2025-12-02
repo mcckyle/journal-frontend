@@ -1,11 +1,13 @@
 //Filename: src/components/Settings/Settings.jsx
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ConfirmModal from "../ConfirmModal/ConfirmModal.jsx";
+import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import "./Settings.css";
 
 const Settings = () => {
+	const { user, accessToken } = useContext(AuthContext);
 	const [theme, setTheme] = useState(localStorage.getItem("theme") || "system");
 	const [fontSize, setFontSize] = useState(localStorage.getItem("fontSize") || "medium");
 	
@@ -57,9 +59,12 @@ const Settings = () => {
 	//Change Password Handler.
 	const handleChangePassword = async () => {
 		try {
-			const response = await fetch("/api/auth/change-password", {
+			const response = await fetch("http://localhost:8080/api/auth/change-password", {
 				method: "PUT",
-				headers: { "Content-Type": "application/json" },
+				headers: { 
+				  "Content-Type": "application/json",
+				  Authorization: `Bearer ${accessToken}`,
+				},
 				body: JSON.stringify({ newPassword })
 			});
 			
@@ -81,8 +86,9 @@ const Settings = () => {
 	//Delete Account Handler.
 	const handleDeleteAccount = async () => {
 		try {
-			const response = await fetch("/api/auth/delete-account", {
-				method: "DELETE"
+			const response = await fetch("http://localhost:8080/api/auth/delete-account", {
+				method: "DELETE",
+				headers: { Authorization: `Bearer ${accessToken}` }
 			});
 			
 			if ( ! response.ok)

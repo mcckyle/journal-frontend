@@ -1,7 +1,8 @@
 //Filename: src/components/HomePage/HomePage.js
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from '../../context/AuthContext';
 import { parseLocalDate } from "../../utils/parseLocalDate";
 
 import "./HomePage.css";
@@ -26,13 +27,11 @@ const prompts = [
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const { accessToken } = useContext(AuthContext);
   const [entries, setEntries] = useState([]);
   const [streak, setStreak] = useState(0);
   const [prompt, setPrompt] = useState("");
   const [affirmation, setAffirmation] = useState("");
-  
-  const token = localStorage.getItem("token");
-  const userId = JSON.parse(atob(token.split(".")[1])).sub;
   
   useEffect(() => {
 	  setPrompt(prompts[Math.floor(Math.random() * prompts.length)]);
@@ -40,17 +39,47 @@ const HomePage = () => {
   }, []);
   
   useEffect(() => {
+	  if ( ! accessToken)
+	  {
+		  navigate("/login");
+		  return;
+	  }
+	  
+	  const fetchCurrentUser = async () => {
+		  try
+		  {
+			  const response = await fetch("http://localhost:8080/api/auth/me", {
+				  headers: { Authorization: `Bearer ${accessToken}` },
+				  credentials: "include"
+			  });
+			  
+			  if ( ! response.ok)
+			  {
+				  throw new Error("Failed to fetch user info!");
+			  }
+			  
+			  const userData = await response.json();
+			  return userData.id;
+		  }
+		  catch (error)
+		  {
+			  console.error(error);
+			  navigate("/login");
+		  }
+	  };
+	  
 	  const fetchEntries = async () => {
 		  try
 		  {
-			  const token = localStorage.getItem("token");
-			  if ( ! token)
+			  const userId = await fetchCurrentUser();
+			  if ( ! userId)
 			  {
 				  return;
 			  }
 			  
-			  const response = await fetch(`http://localhost:8080/api/calendar/user/${userId}`, {
-				  headers: { Authorization: `Bearer ${token}` }
+			  const response = await fetch(`http://localhost:8080/api/calendar`, {
+				  headers: { Authorization: `Bearer ${accessToken}` },
+				  credentials: "include"
 			  });
 			  
 			  if ( ! response.ok)
@@ -106,7 +135,7 @@ const HomePage = () => {
 	  };
 	  
 	  fetchEntries();
-  }, []);
+  }, [accessToken, navigate]);
   
   const handleQuickEntry = () => navigate("/calendar?new-entry=true");
   

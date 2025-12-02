@@ -1,13 +1,16 @@
 //Filename: src/components/Profile.jsx
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Box, Avatar, Typography, Button, Modal, TextField, Alert, CircularProgress } from "@mui/material";
 import { deepPurple } from "@mui/material/colors";
-import "./Profile.css"; // Import the CSS file
+import { AuthContext } from "../../context/AuthContext";
+import "./Profile.css"; // Import the CSS file.
 
 const Profile = () => {
-	const [user, setUser] = useState(null);
-	const [loading, setLoading] = useState(true);
+	const navigate = useNavigate();
+	const { user, accessToken, logout, setUser } = useContext(AuthContext);
+	const [loading, setLoading] = useState(!user);
 	const [error, setError] = useState("");
 	const [openEdit, setOpenEdit] = useState(false);
 	const [editData, setEditData] = useState({ username: "", email: "", bio: "" });
@@ -15,11 +18,12 @@ const Profile = () => {
 	const [exporting, setExporting] = useState(false);
 	const [importing, setImporting] = useState(false);
 	
-	const handleLogout = () => {
-      localStorage.removeItem("token");  // Clear the authentication token.
-      window.location.href = "/login";   // Redirect to the login page.
-    };
+	const handleLogout = async () => {
+		await logout();
+		navigate("/signin", { replace: true });
+	};
 	
+	//Open edit modal.
 	const handleOpenEdit = () => {
 		setEditData({
 		username: user.username || "",
@@ -35,16 +39,18 @@ const Profile = () => {
 		setEditData({ ...editData, [e.target.name]: e.target.value });
 	};
 	
+	//Save profile changes.
 	const handleSaveChanges = async () => {
 		try
 		{
 			setSaving(true);
-			const token = localStorage.getItem("token");
+			
 			const response = await fetch("http://localhost:8080/api/users/update", {
 				method: "PUT",
+				credentials: "include", //Use cookie-based auth.
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${accessToken}`,
 				},
 				body: JSON.stringify(editData),
 			});
@@ -68,49 +74,23 @@ const Profile = () => {
 		}
 	};
 	
-	useEffect(() => {
-		const fetchUser = async () => {
-			try
-			{
-				const token = localStorage.getItem("token");
-				
-				if ( ! token)
-				{
-					window.location.href = "/login";
-					return;
-				}
-				
-				const response = await fetch("http://localhost:8080/api/auth/me", {
-					headers: { Authorization: `Bearer ${token}` },
-				});
-				
-				if ( ! response.ok)
-				{
-					throw new Error("Failed to fetch user details!");
-				}
-				
-				const data = await response.json();
-				setUser(data);
-			}
-			catch (error)
-			{
-				setError(error.message);
-			}
-			finally
-			{
-				setLoading(false);
-			}
-		};
-		
-		fetchUser();
-	}, []);
-	
-	//Helper: Fetch All User Entries.
+	//Fetch All User Entries.
 	const fetchAllEntries = async () => {
-		const token = localStorage.getItem("token");
-		const response = await fetch(`http://localhost:8080/api/calendar/user/${user.id}`, {
-			headers: { Authorization: `Bearer ${token}` }
-		});
+		if ( ! user)
+		{
+			return;
+		}
+		
+        const response = await fetch(`http://localhost:8080/api/calendar`, {
+			headers: { Authorization: `Bearer ${accessToken}` },
+            credentials: "include", //optional, but harmless if refresh is needed.
+        });
+
+        if ( ( ! response.ok) && (response.status !== 204) )
+		{
+			throw new Error('Failed to fetch entries!');
+		}
+		
 		return response.ok ? await response.json() : [];
 	};
 	
@@ -188,12 +168,10 @@ const Profile = () => {
 		}
 		
 		setImporting(true);
-		
-		const text = await file.text();
 		let imported;
 		try
 		{
-			imported = JSON.parse(text);
+			imported = JSON.parse(await file.text());
 		}
 		catch
 		{
@@ -202,22 +180,16 @@ const Profile = () => {
 			return;
 		}
 		
-		const token = localStorage.getItem("token");
-		
 		for (const entry of imported)
 		{
 			await fetch("http://localhost:8080/api/calendar", {
 				method: "POST",
+				credentials: "include",
 				headers: {
 					"Content-Type": "application/json",
-					Authorization: `Bearer ${token}`,
+                    Authorization: `Bearer ${accessToken}`,
 				},
-				body: JSON.stringify({
-					entryDate: entry.entryDate,
-					title: entry.title,
-					content: entry.content,
-					userId: user.id
-				}),
+				body: JSON.stringify({ ...entry, userId: user?.id }),
 			});
 		}
 		
@@ -225,6 +197,16 @@ const Profile = () => {
 		setImporting(false);
 		window.location.reload();
 	};
+	
+	//Early return if user is null.
+	if ( ! user)
+	{
+		return (
+		  <Box className="center-screen">
+		    <Typography>Redirecting...</Typography>
+		  </Box>
+		);
+	}
 	
 	if (loading)
 	{
@@ -258,19 +240,19 @@ const Profile = () => {
 				fontSize: '2.8rem',
 			}}
 		  >
-			{user.username ? user.username.charAt(0).toUpperCase() : "?"}
+			{user?.username ? user.username.charAt(0).toUpperCase() : "?"}
 		</Avatar>
 	
 		<Typography className="profile-username">
-		  {user.username}
+		  {user?.username}
 		</Typography>
 		
 		<Typography className="profile-email">
-		  {user.email}
+		  {user?.email}
 		</Typography>
 		
 		<Typography className="profile-bio">
-		  { user.bio || "Grateful every day. 🌸"}
+		  { user?.bio || "Grateful every day. 🌸"}
 		</Typography>
 	  </Box>
 	  
@@ -288,17 +270,15 @@ const Profile = () => {
 			Export PDF
 		  </Button>
 		  
-		  <label className="import-label">
+		  <Button variant="contained" disabled={importing} component="label">
+			Import JSON
 		    <input
 			  type="file"
 			  accept="application/json"
 			  onChange={handleImportJSON}
-			  style={{ display: "none" }}
-		  />
-		    <Button variant="contained" disabled={importing}>
-			  Import JSON
-		    </Button>
-		  </label>
+			  hidden
+		    />
+		  </Button>
 		  <Button variant="contained" color="error" onClick={handleLogout}>
 			Logout
 		  </Button>

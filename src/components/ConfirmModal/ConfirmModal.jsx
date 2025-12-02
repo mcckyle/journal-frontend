@@ -12,6 +12,7 @@ const ConfirmModal = ({ open, title, message, confirmLabel, onConfirm, onClose }
 	return (
 	  <div className="confirm-backdrop">
 	    <div className="confirm-modal">
+		
 		  <h2 className="confirm-title">{title}</h2>
 		  <p className="confirm-message">{message}</p>
 		  
@@ -19,6 +20,7 @@ const ConfirmModal = ({ open, title, message, confirmLabel, onConfirm, onClose }
 		    <button className="confirm-btn cancel" onClick={onClose}>
 			  Cancel
 			</button>
+			
 			<button className="confirm-btn confirm" onClick={onConfirm}>
 			  {confirmLabel}
 			</button>

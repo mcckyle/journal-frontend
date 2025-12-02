@@ -13,52 +13,58 @@
 	min-height: 100vh;
 	display: flex;
 	justify-content: center;
-	padding: 32px;
+	padding: 40px 24px;
 	
-	background: linear-gradient(165deg, #fffdf9, #f3ede1);
+	background: linear-gradient(165deg, #faf8f4, #f1ecdf);
+	animation: fadeIn 0.25s ease-out;
 }
 
 /* Profile Card Styles. */
 .profile-card {
 	width: 100%;
-	max-width: 720px;
-	background: rgba(255, 255, 255, 0.55);
-	backdrop-filter: blur(18px);
-	border-radius: 26px;
-	box-shadow: 0 10px 32px rgba(0, 0, 0, 0.1);
+	max-width: 680px;
+	background: rgba(255, 255, 255, 0.75);
+	backdrop-filter: blur(14px);
+	border-radius: 24px;
+	box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
 	overflow: hidden;
 }
 
-/* Header Section Styles. */
+/* Header Panel Styles. */
 .profile-header {
 	text-align: center;
 	padding: 48px 24px;
-	background: linear-gradient(145deg, #e9e3ff, #d6c9ff);
+	background: linear-gradient(145deg, #eae6ff, #dcd3ff);
 }
 
 .profile-username {
-	margin-top: 18px;
-	font-size: 2rem;
+	margin-top: 16px;
+	font-size: 1.9rem;
 	font-weight: 700;
+	color: #2b2b2b;
 }
 
 .profile-email {
-	opacity: 0.8;
+	margin-top: 4px;
 	font-size: 1rem;
+	color: #444;
+	opacity: 0.75;
 }
 
 .profile-bio {
-	margin-top: 10px;
-	opacity: 0.72;
+	margin-top: 12px;
+	font-size: 0.95rem;
+	opacity: 0.7;
 	font-style: italic;
 }
 
-/* Action Buttons Styles. */
+/* Actions Row Styles. */
 .profile-actions {
-	padding: 28px;
+	padding: 32px;
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: center;
-	gap: 18px;
+	gap: 14px;
 }
 
 /* Modal Panel Styles. */
@@ -68,43 +74,46 @@
 	left: 50%;
 	
 	width: 92%;
-	max-width: 460px;
+	max-width: 440px;
 	
 	transform: translate(-50%, -50%);
-	background: rgba(255, 255, 255, 0.96);
-	border-radius: 22px;
+	background: #ffffff;
+	border-radius: 20px;
 	
-	padding: 32px;
-	box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
-	backdrop-filter: blur(14px);
+	padding: 28px;
+	box-shadow: 0 10px 32px rgba(0, 0, 0, 0.15);
+	
+	animation: fadeModal 0.28s ease-out;
 }
 
 /* Modal Title Styles. */
 .modal-title {
+	text-align: center;
 	font-size: 1.45rem;
 	font-weight: 700;
-	margin-bottom: 8px;
-	text-align: center;
+	margin-bottom: 10px;
 }
 
 /* Modal Buttons Styles. */
 .modal-actions {
-	margin-top: 22px;
 	display: flex;
 	justify-content: center;
 	gap: 16px;
-}
-
-/* Fade In Animation Styles. */
-.modalFade {
-	animation: fadeIn 0.25s ease-out;
+	margin-top: 24px;
 }
 
 .import-label {
 	display: inline-block;
 }
 
+/* Fade In Animation Styles. */
 @keyframes fadeIn
+{
+	from { opacity: 0; transform: translateY(8px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeModal
 {
 	from { opacity: 0; transform: translate(-50%, -46%); }
 	to { opacity: 1; transform: translate(-50%, -50%); }
