@@ -1,6 +1,7 @@
 {
   "name": "gratitude-journal-frontend",
   "version": "0.1.0",
+  "homepage": "https://mcckyle.github.io/journal-frontend",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.13.5",
